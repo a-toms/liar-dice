@@ -1,18 +1,57 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class Combinations {
 
 	public static void main(String[] args) {
 		Combinations comb = new Combinations();
 		//System.out.println(comb.generatePossibleRolls(6));
-		String test = "13119";
-		System.out.println(hasNIndenticalChars(test, 4));
-
+		String test = "221133";
+		System.out.println(hasNPairs(test, 2));
 
 	}
+
+	private static boolean hasFiveOfAKind(String candidate){
+		return hasNIndenticalChars(candidate, 5);
+	}
+
+	private static boolean hasFullHouse(String candidate){
+		return hasNIndenticalChars(candidate, 2) && hasNIndenticalChars(candidate, 3);
+	}
+
+	private static boolean hasFourOfAKind(String candidate){
+		return hasNIndenticalChars(candidate, 4);
+	}
+
+	private static boolean hasStraight(String candidate){
+		return areAllNumbersConsecutive(candidate, 0, 1);
+	}
+
+	private static boolean hasthreeOfAKind(String candidate){
+		return hasNIndenticalChars(candidate, 3);
+	}
+
+	private static boolean hasTwoPairs(String candidate){
+		return hasNPairs(candidate, 2);
+	}
+
+	private static boolean hasOnePair(String candidate){
+		return hasNPairs(candidate, 1);
+	}
+
+	private static boolean hasNPairs(String candidate, int n){
+		// Todo: add comment
+		String pairs = "";
+		for (int i = 0; i < candidate.length(); i++){
+			String target = String.valueOf(candidate.charAt(i));
+			if (countCharOccurences(candidate, candidate.charAt(i)) == 2 &&
+					!pairs.contains(target)){
+				pairs += target;
+			}
+		}
+		return pairs.length() == n;
+	}
+
 
 	private static boolean hasNIndenticalChars(String candidate, int n){
 		for (int i = 0; i < candidate.length(); i++){
@@ -34,7 +73,7 @@ public class Combinations {
 		return count;
 	}
 
-	//todo: write containsAllConsecutiveNumbers
+
 
 
 //	public static ArrayList<String> returnAllFiveOfAKind(ArrayList<String> rolls){
@@ -45,22 +84,6 @@ public class Combinations {
 //
 //
 //	}
-
-	private static boolean hasFiveOfAKind(String candidate){
-		char first = candidate.charAt(0);
-		for (int i = 0; i < candidate.length(); i++){
-			if (candidate.charAt(i) != first) return false;
-		}
-		return true;
-	}
-
-	private static boolean hasFourOfAKind(String candidate){
-		String result = "";
-		for (int i = 0; i < candidate.length() - 1; i++){
-
-		}
-		return true;
-	}
 
 
 	private static String sortString(String start){
@@ -117,7 +140,8 @@ public class Combinations {
 	private static boolean areAnyDigitsOfBPresent(int a, int b){
 		String elements = String.valueOf(b);
 		for (int i = 0; i < elements.length(); i++){
-			if (isElementPresent(a, Integer.parseInt(elements.substring(i, i + 1))) == true){
+			if (isElementPresent(a, Integer.parseInt(elements.substring(i, i + 1)))
+					== true){
 				return true;
 			}
 		}
@@ -129,6 +153,23 @@ public class Combinations {
 		if (String.valueOf(candidate).contains(element)) return true;
 		else return false;
 	}
+
+	private static boolean areAllNumbersConsecutive(
+			String candidate, int firstIndex, int secondIndex
+	){
+		if (secondIndex == candidate.length()) return true;
+		if (Integer.valueOf(candidate.charAt(secondIndex))
+				== Integer.valueOf(candidate.charAt(firstIndex)) + 1){
+			return areAllNumbersConsecutive(
+					candidate, firstIndex + 1, secondIndex + 1
+			);
+		}
+		else return false;
+	}
+
+	//private static ArrayList<String> filterRolls(ArrayList<String> rawRolls){
+		//Todo: filter rolls
+	//}
 
 
 
