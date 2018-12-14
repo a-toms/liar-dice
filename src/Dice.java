@@ -15,11 +15,9 @@ public class Dice {
 	}
 
 	public void rollAllDice(){
-		for (int i = 0; i < numberOfDice; i++){
-			rollDie(i);
-		}
-
+		for (int i = 0; i < numberOfDice; i++) rollDie(i);
 	}
+
 	public void rollDie(int die){
 		dice[die] = random.nextInt(6) + 1;
 	}

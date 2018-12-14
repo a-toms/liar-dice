@@ -8,7 +8,6 @@ public class Combinations {
 		//System.out.println(comb.generatePossibleRolls(6));
 		String test = "221133";
 		System.out.println(hasNPairs(test, 2));
-
 	}
 
 	private static boolean hasFiveOfAKind(String candidate){
@@ -138,6 +137,7 @@ public class Combinations {
 
 
 	private static boolean areAnyDigitsOfBPresent(int a, int b){
+		// Todo: rename this
 		String elements = String.valueOf(b);
 		for (int i = 0; i < elements.length(); i++){
 			if (isElementPresent(a, Integer.parseInt(elements.substring(i, i + 1)))
