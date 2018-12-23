@@ -15,7 +15,9 @@ public class Dice {
 	}
 
 	public void rollAllDice(){
-		for (int i = 0; i < numberOfDice; i++) rollDie(i);
+		for (int i = 0; i < numberOfDice; i++){
+			rollDie(i);
+		}
 	}
 
 	public void rollDie(int die){
@@ -28,7 +30,7 @@ public class Dice {
 		for (int die : dice){
 			System.out.print(die + "\t");
 		}
-		System.out.println("");
+		System.out.println();
 	}
 
 	public static void main(String[] args) {
