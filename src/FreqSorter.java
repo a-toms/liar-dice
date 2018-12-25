@@ -9,13 +9,12 @@ public class FreqSorter {
 	ArrayList<String> freqCounts;
 
 	public FreqSorter() {
-		newmap = new HashMap<>();
-		freqCounts = new ArrayList<>();
-		sorted = "";
-
 	}
 
 	public String sortByFrequencyAndSize(String unsorted) {
+		newmap = new HashMap<>();
+		freqCounts = new ArrayList<>();
+		sorted = "";
 		raw = unsorted;
 		createFrequencyMap();
 		createListOfStringsByFrequency();

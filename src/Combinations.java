@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 public class Combinations {
@@ -7,17 +8,36 @@ public class Combinations {
 	public static void main(String[] args) {
 		Combinations cb = new Combinations();
 		ArrayList<String> rolls = cb.generatePossibleRolls(5);
-		String test1 = "1131122323";
-		String test2 = "33";
-		FreqSorter freqSorter = new FreqSorter();
-		System.out.println(freqSorter.sortByFrequencyAndSize(test1));
+		ArrayList<String> fullHouseRolls = cb.getFullHouseRolls(rolls);
+		System.out.println(fullHouseRolls);
 
-		//
 
 	}
+
+	FreqSorter freqSorter;
 
 	public Combinations(){
+		freqSorter = new FreqSorter();
 	}
+
+	public ArrayList<String> sortRolls(ArrayList<String> unsortedRolls){
+		ArrayList<String> sortedRolls = new ArrayList<>();
+
+		// sort each string by char frequency and size
+		for (String roll : unsortedRolls){
+			String sorted = freqSorter.sortByFrequencyAndSize(roll);
+			sortedRolls.add(sorted);
+		}
+		// order strings by size compared to other strings
+		Collections.sort(sortedRolls);
+
+		// Todo: remove all duplicates
+		return sortedRolls;
+	}
+
+	//Todo: sort all major category rolls.
+
+
 
 
 
