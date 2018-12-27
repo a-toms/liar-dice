@@ -33,12 +33,12 @@ public class FreqSorter {
 		Set set = newmap.entrySet();
 		for (Object aSet : set) {
 			Map.Entry me = (Map.Entry) aSet;
-			String segment = StringUtils.repeat(me.getKey().toString(), Integer.parseInt(me.getValue().toString()));
+			String segment = StringUtils.repeat(me.getKey().toString(),
+					Integer.parseInt(me.getValue().toString()));
 			// We must convert object types to strings before converting to
 			// integers. Why?
 			freqCounts.add(segment);
 		}
-		System.out.println(freqCounts);
 	}
 
 	private String produceSortedString() {
