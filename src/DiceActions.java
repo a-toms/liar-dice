@@ -1,12 +1,15 @@
 
+import java.util.Arrays;
 import java.util.Random;
 
+
+// Todo: add DiceRanker as a parent to DiceActions
 public class DiceActions {
 
-	final int numberOfDice = 6;
+	final int numberOfDice = 5; //todo: alter this line
 	int[] dice = new int[numberOfDice];
 	Random random = new Random();
-	int score = 0;
+	int rank = 0;
 
 
 	public DiceActions(){
@@ -31,11 +34,14 @@ public class DiceActions {
 		System.out.println();
 	}
 
+	public String getDice(){
+		return Arrays.toString(dice);
+	}
+
 	public static void main(String[] args) {
 		DiceActions diceActions = new DiceActions();
 		diceActions.printDice();
-		diceActions.rollAllDice();
-		diceActions.printDice();
+		System.out.println(diceActions.getDice());
 	}
 
 	// How to calculate dice score and update class attribute score?

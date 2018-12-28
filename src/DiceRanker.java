@@ -8,9 +8,6 @@ public class DiceRanker {
 
 	public static void main(String[] args) {
 		DiceRanker diceRanker = new DiceRanker(5);
-		String test1 = "12356";
-		System.out.println(diceRanker.getRank("65365"));
-		System.out.println(diceRanker.getRoll(123));
 	}
 
 	public DiceRanker(int n_dice){
@@ -256,7 +253,6 @@ public class DiceRanker {
 	}
 
 	private boolean areAnyDigitsPresent(int a, int b){
-		// Todo: This seems unnecessarily complex. Perhaps use String or StringBulder compareTo method instead.
 		String elements = String.valueOf(b);
 		for (int i = 0; i < elements.length(); i++){
 			if (isElementPresent(
