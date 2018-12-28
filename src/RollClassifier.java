@@ -1,16 +1,15 @@
-import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
-public class DiceRanker {
+public class RollClassifier {
 
 	private StringFrequencySorter freqSorter;
 	private HashMap<Integer, String> rollRank;
 
 	public static void main(String[] args) {
-		DiceRanker diceRanker = new DiceRanker(5);
+		RollClassifier rollClassifier = new RollClassifier(5);
 	}
 
-	public DiceRanker(int n_dice){
+	public RollClassifier(int n_dice){
 		freqSorter = new StringFrequencySorter();
 		rollRank = new HashMap<>();
 		orderRollsByRank(n_dice);
@@ -72,7 +71,6 @@ public class DiceRanker {
 		}
 		return possible_rolls;
 	}
-
 
 	private ArrayList<String> getFiveOfAKindRolls(ArrayList<String> rawRolls){
 		ArrayList<String> fiveOfAKindRolls = new ArrayList<>();
