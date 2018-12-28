@@ -1,8 +1,7 @@
 
-import java.util.ArrayList;
 import java.util.Random;
 
-public class Dice {
+public class DiceActions {
 
 	final int numberOfDice = 6;
 	int[] dice = new int[numberOfDice];
@@ -10,7 +9,7 @@ public class Dice {
 	int score = 0;
 
 
-	public Dice(){
+	public DiceActions(){
 		rollAllDice();
 	}
 
@@ -24,9 +23,8 @@ public class Dice {
 		dice[die] = random.nextInt(6) + 1;
 	}
 
-
 	public void printDice(){
-		System.out.print("Dice:\t");
+		System.out.print("DiceActions:\t");
 		for (int die : dice){
 			System.out.print(die + "\t");
 		}
@@ -34,10 +32,10 @@ public class Dice {
 	}
 
 	public static void main(String[] args) {
-		Dice dice = new Dice();
-		dice.printDice();
-		dice.rollAllDice();
-		dice.printDice();
+		DiceActions diceActions = new DiceActions();
+		diceActions.printDice();
+		diceActions.rollAllDice();
+		diceActions.printDice();
 	}
 
 	// How to calculate dice score and update class attribute score?

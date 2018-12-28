@@ -1,14 +1,14 @@
 import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
-public class FreqSorter {
+public class StringFrequencySorter {
 
 	String raw;
 	HashMap <Character, Integer>newmap;
 	String sorted;
 	ArrayList<String> freqCounts;
 
-	public FreqSorter() {
+	public StringFrequencySorter() {
 	}
 
 	public String sortByFrequencyAndSize(String unsorted) {

@@ -1,30 +1,48 @@
+import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
+public class DiceRanker {
 
-public class Combinations {
-
-	FreqSorter freqSorter;
-	HashMap<Integer, String> rollRank;
-
+	private StringFrequencySorter freqSorter;
+	private HashMap<Integer, String> rollRank;
 
 	public static void main(String[] args) {
-		Combinations cb = new Combinations();
-		cb.orderRollsByRank(5);
-		cb.getRank("22654");
-
+		DiceRanker diceRanker = new DiceRanker(5);
+		String test1 = "12356";
+		System.out.println(diceRanker.getRank("65365"));
+		System.out.println(diceRanker.getRoll(123));
 	}
 
-	public Combinations(){
-		freqSorter = new FreqSorter();
+	public DiceRanker(int n_dice){
+		freqSorter = new StringFrequencySorter();
 		rollRank = new HashMap<>();
-
+		orderRollsByRank(n_dice);
 	}
 
-	public void orderRollsByRank(int numberOfDice) {
+	public boolean isRollHigher(String rollA, String rollB){
+		return getRank(rollA) > getRank(rollB);
+	}
 
+	public Integer getRank(String roll){
+		for (Map.Entry<Integer, String> entry : rollRank.entrySet()){
+			if (freqSorter.sortByFrequencyAndSize(roll).equals(
+					entry.getValue())
+			){
+				return entry.getKey();
+			}
+		}
+		System.out.println("Roll not found.");
+		return 0;
+	}
+
+	public String getRoll(Integer rank){
+		return rollRank.get(rank);
+	}
+
+	private void orderRollsByRank(int numberOfDice) {
 		ArrayList<String> allRolls = generatePossibleRolls(numberOfDice);
-
 		ArrayList<String> orderedRolls = new ArrayList<>();
+
 		orderedRolls.addAll(getHighNumberRolls(allRolls));
 		orderedRolls.addAll(getOnePairRolls(allRolls));
 		orderedRolls.addAll(getTwoPairRolls(allRolls));
@@ -34,60 +52,24 @@ public class Combinations {
 		orderedRolls.addAll(getFourOfAKindRolls(allRolls));
 		orderedRolls.addAll(getFiveOfAKindRolls(allRolls));
 
-		System.out.println(orderedRolls);
-
 		for (int i = 0; i < orderedRolls.size(); i++) {
-
 			rollRank.put(i + 1, orderedRolls.get(i));
 		}
 	}
 
-	// Todo: continue with the getRank
-	public Integer getRank(String roll){
-		for (Map.Entry<Integer, String> entry : rollRank.entrySet()){
-			if (freqSorter.sortByFrequencyAndSize(roll) == entry.getValue().toString()){
-				return entry.getKey();
-			}
-		}
-		System.out.println("Roll not found.");
-		return 0;
-	}
-
-	public ArrayList<String> getSortedRolls(ArrayList<String> unsortedRolls){
-		ArrayList<String> sortedRolls = new ArrayList<>();
-
-		// Sort each string by char frequency and size
-		for (String roll : unsortedRolls){
-			String sorted = freqSorter.sortByFrequencyAndSize(roll);
-			sortedRolls.add(sorted);
-		}
-
-		// Order strings by size compared to other strings
-		Collections.sort(sortedRolls);
-
-		// Remove duplicates
-		Set<String> listToSet = new LinkedHashSet<String>(sortedRolls);
-		sortedRolls = new ArrayList<String>(listToSet);
-
-		return sortedRolls;
-	}
-
-
-	public ArrayList<String> generatePossibleRolls(int number_of_dice){
+	private ArrayList<String> generatePossibleRolls(int number_of_dice){
+		// Generate range of dice faces
 		String start = "";
 		String end = "";
-
-		// Generate range of dice faces
 		for (int i = 1; i <= number_of_dice; i += 1) {
 			start += "1";
 			end += "6";
 		}
-
 		// Generate rolls
 		ArrayList<String> possible_rolls = new ArrayList<>();
 		int notFacesOfADie = 7890;
 		for (int i = Integer.parseInt(start); i <= Integer.parseInt(end); i++){
-			if (areAnyDigitsOfBPresent(i, notFacesOfADie) == false){
+			if (areAnyDigitsPresent(i, notFacesOfADie) == false){
 				possible_rolls.add(String.valueOf(i));
 			}
 		}
@@ -175,19 +157,17 @@ public class Combinations {
 		return getSortedRolls(highNumberRolls);
 	}
 
-
-
 	private boolean hasFiveOfAKind(String candidate){
-		return hasNIndenticalChars(candidate, 5);
+		return hasNIdenticalChars(candidate, 5);
 	}
 
 	private boolean hasFullHouse(String candidate){
-		return hasNIndenticalChars(candidate, 3) &&
-				hasNIndenticalChars(candidate, 2) ;
+		return hasNIdenticalChars(candidate, 3) &&
+				hasNIdenticalChars(candidate, 2) ;
 	}
 
 	private boolean hasFourOfAKind(String candidate){
-		return hasNIndenticalChars(candidate, 4);
+		return hasNIdenticalChars(candidate, 4);
 	}
 
 	private boolean hasStraight(String candidate){
@@ -195,8 +175,8 @@ public class Combinations {
 	}
 
 	private boolean hasThreeOfAKind(String candidate){
-		return hasNIndenticalChars(candidate, 3) &&
-				!hasNIndenticalChars(candidate, 2);
+		return hasNIdenticalChars(candidate, 3) &&
+				!hasNIdenticalChars(candidate, 2);
 	}
 
 	private boolean hasTwoPair(String candidate){
@@ -205,7 +185,7 @@ public class Combinations {
 
 	private boolean hasOnePair(String candidate){
 		return hasNPairs(candidate, 1) &&
-				!hasNIndenticalChars(candidate, 3);
+				!hasNIdenticalChars(candidate, 3);
 	}
 
 	private boolean hasHighNumber(String candidate){
@@ -214,7 +194,7 @@ public class Combinations {
 				return false;
 
 			}
-			if(hasNIndenticalChars(candidate, i + 1)){
+			if(hasNIdenticalChars(candidate, i + 1)){
 				return false;
 			}
 		}
@@ -232,7 +212,7 @@ public class Combinations {
 		return pairsRecord.length() == n;
 	}
 
-	private boolean hasNIndenticalChars(String candidate, int n){
+	private boolean hasNIdenticalChars(String candidate, int n){
 		for (int i = 0; i < candidate.length(); i++){
 			if (countCharOccurrences(candidate, candidate.charAt(i)) == n){
 				return true;
@@ -252,6 +232,22 @@ public class Combinations {
 		return count;
 	}
 
+
+	private ArrayList<String> getSortedRolls(ArrayList<String> unsortedRolls){
+		ArrayList<String> sortedRolls = new ArrayList<>();
+		// Sort each string by char frequency and size
+		for (String roll : unsortedRolls){
+			String sorted = freqSorter.sortByFrequencyAndSize(roll);
+			sortedRolls.add(sorted);
+		}
+		// Order strings by size compared to other strings
+		Collections.sort(sortedRolls);
+		// Remove duplicates
+		Set<String> listToSet = new LinkedHashSet<>(sortedRolls);
+		sortedRolls = new ArrayList<String>(listToSet);
+		return sortedRolls;
+	}
+
 	private String sortString(String unsorted){
 		// Returns in ascending order
 		char[] chars = unsorted.toCharArray();
@@ -259,19 +255,7 @@ public class Combinations {
 		return String.valueOf(chars);
 	}
 
-	private String sortString(String unsorted, boolean descending){
-		// Returns in descending order
-		String ascending = sortString(unsorted);
-		if (descending) {
-			return new StringBuilder(ascending).reverse().toString();
-		}
-		else{
-			return ascending;
-		}
-	}
-
-
-	private boolean areAnyDigitsOfBPresent(int a, int b){
+	private boolean areAnyDigitsPresent(int a, int b){
 		// Todo: This seems unnecessarily complex. Perhaps use String or StringBulder compareTo method instead.
 		String elements = String.valueOf(b);
 		for (int i = 0; i < elements.length(); i++){
@@ -293,15 +277,14 @@ public class Combinations {
 		}
 	}
 
-
 	private boolean areNumbersConsecutive(
 			String candidate, int firstIndex, int secondIndex
 	){
 		if (secondIndex == candidate.length()){
 			return true;
 		}
-		if (Integer.valueOf(candidate.charAt(secondIndex))
-				== Integer.valueOf(candidate.charAt(firstIndex) + 1)){
+		if (Integer.valueOf(candidate.charAt(secondIndex)).equals(
+				candidate.charAt(firstIndex) + 1)){
 			return areNumbersConsecutive(
 					candidate, firstIndex + 1, secondIndex + 1
 			);
