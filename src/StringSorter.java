@@ -1,14 +1,22 @@
 import org.apache.commons.lang3.StringUtils;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class StringFrequencySorter {
+public class StringSorter {
 
 	String raw;
 	HashMap <Character, Integer>newmap;
 	String sorted;
 	ArrayList<String> freqCounts;
 
-	public StringFrequencySorter() {
+	public static void main(String[] args) {
+		StringSorter stringSorter = new StringSorter();
+		String test1 = "4234233";
+		System.out.println(stringSorter.sortBySize(test1));
+	}
+
+	public StringSorter() {
 	}
 
 	public String sortByFrequencyAndSize(String unsorted) {
@@ -63,5 +71,15 @@ public class StringFrequencySorter {
 
 	private boolean isGreaterValue(String current, String challenger){
 		return Integer.valueOf(challenger) > Integer.valueOf(current);
+	}
+
+	public String sortBySize(String unsorted){
+		String sorted = Stream.of(
+				unsorted.split(""))
+				.sorted()
+				.collect(Collectors.joining()
+		);
+		StringBuilder descendingOrder = new StringBuilder(sorted).reverse();
+		return descendingOrder.toString();
 	}
 }

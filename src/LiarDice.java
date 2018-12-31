@@ -1,39 +1,49 @@
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Scanner;
+
 
 public class LiarDice {
 
 	// Dice remain in LiarDice
 
-	int nPlayers;
+	int numberOfPlayers;
+	int numberOfDice;
 	ArrayList<Player> players;
-	Scanner sc;
+	Scanner scanner;
 	Dice dice;
+	String diceThatPreviousPlayerSaysHeHas;
 
 	public static void main(String[] args) {
 		LiarDice liarDice = new LiarDice();
-		liarDice.addNPlayers(5);
-		liarDice.getPlayerAction();
+		liarDice.addPlayers(5);
+//		liarDice.getPlayerAction();
 //		liarDice.gameLoop();
-
+		String test1 = "55446";
+		String test2 = "44455";
+		System.out.println(StringUtils.difference("44455", "55446"));
+		// todo: perhaps sort the above by number before using difference
 	}
 
 	public LiarDice(){
-		sc = new Scanner(System.in);
-		dice = new Dice(5);
+		numberOfDice = 5;
+		scanner = new Scanner(System.in);
+		dice = new Dice(numberOfDice);
+		diceThatPreviousPlayerSaysHeHas = new String();
 		players = new ArrayList<>();
+
 	}
 
 	public void getNumberOfPlayers(){
 		System.out.println("Enter the number of players in the game");
-		nPlayers = sc.nextInt();
-		addNPlayers(nPlayers);
+		numberOfPlayers = scanner.nextInt();
+		addPlayers(numberOfPlayers);
 		System.out.printf("The game has %d players", players.size());
 	}
 
-	private void addNPlayers(int nPlayers){
-
+	private void addPlayers(int nPlayers){
 		for (int i = 1; i <= nPlayers; i++){
 			Player player = new Player("player" + String.valueOf(i));
 			players.add(player);
@@ -52,42 +62,15 @@ public class LiarDice {
 
 	private void getPlayerAction(){
 		System.out.println("Player X, press enter to show the dice");
-		sc.nextLine();
+		scanner.nextLine();
 		dice.printDice();
 		// Todo: continue
-		if (decideToRollDice()){
+		//if (Player.decideToRollDice()){
 
 			// choose which dice to roll. You may roll any of the dice.
 		}
-		System.out.println("!true");
+		//System.out.println("!true");
 		// announce dice
-
-
-
-
-	}
-
-
-
-	private boolean decideToRollDice(){
-		System.out.println(
-				"Options:\n" +
-				"- Press 1 to choose which dice to roll\n" +
-				"- Press 2 to announce the hand to pass to the next player\n"
-		);
-		// Todo: modify the below so that non-int entries also re-prompt user.
-		Integer command = sc.nextInt();
-		if (command.equals(1)){
-			return true;
-		}
-		if (command.equals(2)){
-			return false;
-		}
-		System.out.println("Invalid choice. Please choose again.");
-		return decideToRollDice();
-	}
-
-
 
 	public void gameLoop(){
 		// create dice
@@ -102,7 +85,7 @@ public class LiarDice {
 
 
 				System.out.println("Enter 1 to remove life from" + nextPlayer);
-				int command = sc.nextInt();
+				int command = scanner.nextInt();
 				if (command == 1){
 					nextPlayer.loseLife();
 					playersIterator.remove();

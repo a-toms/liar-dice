@@ -2,7 +2,7 @@ import java.util.*;
 
 public class RollClassifier {
 
-	private StringFrequencySorter freqSorter;
+	private StringSorter freqSorter;
 	private HashMap<Integer, String> rollRank;
 
 	public static void main(String[] args) {
@@ -10,7 +10,7 @@ public class RollClassifier {
 	}
 
 	public RollClassifier(int n_dice){
-		freqSorter = new StringFrequencySorter();
+		freqSorter = new StringSorter();
 		rollRank = new HashMap<>();
 		orderRollsByRank(n_dice);
 	}
