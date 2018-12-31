@@ -43,12 +43,15 @@ public class Player {
 	}
 
 
-	/*
+	/* Todo: Interesting probability question
+
 	The current approach of rolling the die that will give the player the best hand is suboptimal.
-	Todo: Instead, I want the bot to roll the dice/die that will give him the highest chance
+
+	Instead, I want the bot to roll the dice/die that will give him the highest chance
 	of exceeding the previous player's throw. There will be a way to calculate this.
+
 	How do I calculate the optimal number of dice to throw to have the highest chance of beating the
-	previous player's throw?
+	previous player's dice ranking?
 
 	*/
 
