@@ -15,7 +15,6 @@ public class Dice extends RollClassifier {
 	int rank;
 
 	public static void main(String[] args) {
-		Dice dice = new Dice(5);
 	}
 
 	public Dice(int nDice){

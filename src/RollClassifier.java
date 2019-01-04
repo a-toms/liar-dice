@@ -1,13 +1,11 @@
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 public class RollClassifier {
 
 	private StringSorter freqSorter;
 	private HashMap<Integer, String> rollRank;
-
-	public static void main(String[] args) {
-		RollClassifier rollClassifier = new RollClassifier(5);
-	}
 
 	public RollClassifier(int n_dice){
 		freqSorter = new StringSorter();
@@ -31,9 +29,34 @@ public class RollClassifier {
 		return 0;
 	}
 
+	public ArrayList<String> getAllRollsContaining(String target){
+		ArrayList<String> rollsContaining = new ArrayList<>();
+		for (Map.Entry<Integer, String> entry : rollRank.entrySet()){
+			String roll = String.valueOf(entry.getValue());
+			if (containsAll(roll, target)){
+				rollsContaining.add(roll);
+			}
+		}
+		return rollsContaining;
+	}
+
+	private boolean containsAll(String candidate, String target){
+		/* Returns boolean based on whether the candidate contains
+		at least one of each of the characters of target.
+		 */
+		for (int i = 0; i < target.length(); i++){
+			if (!StringUtils.contains(candidate, target.charAt(i))){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public String getRoll(Integer rank){
 		return rollRank.get(rank);
 	}
+
+
 
 	private void orderRollsByRank(int numberOfDice) {
 		ArrayList<String> allRolls = generatePossibleRolls(numberOfDice);

@@ -1,6 +1,7 @@
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 
@@ -28,9 +29,9 @@ public class Player {
 		Dice dice = new Dice(5);
 		Player testPlayer = new Player("Alfred");
 		ArrayList<Integer> testDice = new ArrayList<>();
-		testDice.add(1);
 		testDice.add(4);
-		testDice.add(2);
+		testDice.add(4);
+		testDice.add(4);
 		testDice.add(3);
 		testDice.add(6);
 		dice.setRealDice(testDice);
@@ -38,8 +39,8 @@ public class Player {
 		String previouslyStatedDice = "44336";
 		// Todo: put the above in a unit test
 
-		testPlayer.chooseDiceToRollAutomatically(dice, previouslyStatedDice);
-
+		//testPlayer.chooseDiceToRollAutomatically(dice, previouslyStatedDice);
+		System.out.println(testPlayer.rollClassifier.getAllRollsContaining("36"));
 	}
 
 
@@ -53,62 +54,67 @@ public class Player {
 	How do I calculate the optimal number of dice to throw to have the highest chance of beating the
 	previous player's dice ranking?
 
+
 	*/
 
+	//todo: continue here
+	private void calculateNumberOfSuperiorPossibleRollsByRollingNDice(){
+		// todo: get all combination  of the two die not to roll. Put this in separate method.
 
-	private Integer getRankOfDiceToBeat(String diceThatPreviousPlayerSaysHeHas){
-		return rollClassifier.getRank(
-				diceThatPreviousPlayerSaysHeHas
-		);
+		// todo: find all combinations with the dice not to roll YES
+
+		// todo: rank those combinations. Find the number of higher ranking combinations.
+
 	}
 
-
 	public void chooseDiceToRollAutomatically(
-			Dice dice, String diceThatPreviousPlayerSaysHeHas
-	){
+			Dice dice, String diceThatPreviousPlayerSaysHeHas){
 		Integer rankOfDiceToBeat = getRankOfDiceToBeat(
 				diceThatPreviousPlayerSaysHeHas
 		);
-		int possibleRank = calculateHighestPossibleRankByRollingOneDie(dice);
-		isHigher(possibleRank, rankOfDiceToBeat);
-
-		//create choose die to roll method
 
 
+		for (int dieIndexToRoll = 0; dieIndexToRoll < numberOfDice; dieIndexToRoll++) {
+			Integer numberOfHigherRankingPossibilities = calculateNumberOfSuperiorPossibleRollsForOneDie(
+					dice, dieIndexToRoll
+			);
+		}
 	}
+
+
+	private Integer getRankOfDiceToBeat(String diceThatPreviousPlayerSaysHeHas){
+		return rollClassifier.getRank(diceThatPreviousPlayerSaysHeHas);
+	}
+
 
 	private boolean isHigher(int possibleRank, int previousRank){
 		return possibleRank > previousRank;
 	}
 
 
-
-	private Integer calculateHighestPossibleRankByRollingOneDie(Dice dice){
-		Integer highestRank = 0;
-		for (int die = 0; die <= numberOfDice - 1; die++){
-			Integer rank = calculateHighestPossibleRankByRollingDie(dice, die);
-			if (rank > highestRank){
-				highestRank = rank;
-			}
-		}
-		return highestRank;
-	}
-
-	private Integer calculateHighestPossibleRankByRollingDie(Dice dice, int dieIndex){
-		// I could alter this to find the dice to roll that has the best chance of
-		// beating the previous hand, rather than getting the highest rank.
+	private Integer calculateNumberOfSuperiorPossibleRollsForOneDie(Dice dice, int dieIndex){
+		// This works but is limited to one die. I need an extensible solution.
 		ArrayList<Integer> currentDice = dice.getRealDice();
-		Integer highestRank = 0;
+		Integer currentDiceRank = rollClassifier.getRank(getString(currentDice));
+		ArrayList<String> higherRankingDice = new ArrayList<>();
+		ArrayList<Integer> possibleDice = (ArrayList<Integer>) dice.getRealDice().clone();
+
 		for (int i = 1; i <= 6; i++){
-			ArrayList<Integer> possibleDice = (ArrayList<Integer>) dice.getRealDice().clone();
 			possibleDice.set(dieIndex, i);
-			Integer rank = rollClassifier.getRank(getString(possibleDice));
-			if (rank > highestRank){
-				highestRank = rank;
+			Integer possibleDiceRank = rollClassifier.getRank(getString(possibleDice));
+			if (possibleDiceRank > currentDiceRank){
+				higherRankingDice.add(getString(possibleDice));
 			}
 		}
-		return highestRank;
+		System.out.println(
+				"Probability of increasing rank by rolling " + dieIndex +
+						"= " + higherRankingDice.size()
+		);
+		return higherRankingDice.size();
 	}
+
+
+
 
 	public String getString(ArrayList<Integer> integerArrayList){
 		StringBuilder stringBuilder = new StringBuilder();
