@@ -14,6 +14,7 @@ public class LiarDice {
 	ArrayList<Player> players;
 	Scanner scanner;
 	Dice dice;
+	String announcedHand;
 	String handThatPreviousPlayerSaidHeHad;
 	RollClassifier rollClassifier;
 
@@ -23,6 +24,7 @@ public class LiarDice {
 		scanner = new Scanner(System.in);
 		dice = new Dice(numberOfDice);
 		rollClassifier = new RollClassifier(numberOfDice);
+		announcedHand = new String();
 		handThatPreviousPlayerSaidHeHad = new String();
 		players = new ArrayList<>();
 	}
@@ -51,14 +53,16 @@ public class LiarDice {
 		return lifeCounter >= 2;
 	}
 
-	private void askPlayerForActions() {
+	private String getAnnouncedHand() {
 		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		System.out.println("Player 1, the dice are:");
 		dice.printDice();
-		getActions();
-
+		if (playerWantsToRollDice()){
+			rollChoseDice();
+		}
+		return chooseHandToAnnounce();
 	}
 
 	private void showHandThatPreviousPlayerSaidHeHad(){
@@ -68,18 +72,14 @@ public class LiarDice {
 		);
 	}
 
-	private void getActions(){
-		if (playerWantsToRollDice()){
-			rollChoseDice();
-		}
-		chooseHandToAnnounce();
-	}
-
 	private boolean playerWantsToRollDice(){
 		System.out.println("Press Y if you would like to roll any dice");
 		String decision = scanner.next();
 		return decision.toUpperCase().equals("Y");
 	}
+
+
+
 
 	private String chooseHandToAnnounce(){
 		System.out.println(
@@ -88,6 +88,7 @@ public class LiarDice {
 		dice.printDice();
 
 		//Choose hand to announce
+		showHandThatPreviousPlayerSaidHeHad();
 		System.out.printf(
 				"Enter the %d dice to announce to the next player\n",
 				numberOfDice
@@ -121,9 +122,9 @@ public class LiarDice {
 					handThatPreviousPlayerSaidHeHad, announcedHand)
 			){
 				System.out.printf(
-						"Unfortunately, the hand that you proposed to announce," +
-						"%s,\nmust have a higher rank than the hand that the\n" +
-						"previous player announced, %s. Repeating question...\n",
+						"Unfortunately, the hand that you proposed to announce, " +
+						"%s,\n does not have a higher rank than the hand that the\n" +
+						"previous player announced, %s. \nRepeating question...\n\n",
 						announcedHand, handThatPreviousPlayerSaidHeHad);
 				return chooseHandToAnnounce();
 			}
@@ -196,23 +197,34 @@ public class LiarDice {
 		liarDice.addPlayers(5);
 		liarDice.dice.setAllDice("22315");
 		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
-		liarDice.askPlayerForActions();
-		//Todo: implement acceptOrReject
+		String announcedHand = liarDice.getAnnouncedHand();
+		String answer = liarDice.acceptOrReject(announcedHand);
+		if (answer.equals("accept")){
+			// next turn
+		}
+		if (answer.equals("reject")){
+			String loser = liarDice.findLoser(announcedHand);
+			System.out.println(loser + " loses a life");
+		}
+		//todo: 1. subtract life from loser 2. implement game loop
+
+
+
 
 	}
 
 	private String acceptOrReject(String announcedHand){
 		System.out.printf(
-				"The player asked you to accept the hand %s\n",
+				"The player asked you to accept the hand:\n%s\n",
 				announcedHand
 		);
 		System.out.printf(
-				"The prior announced hand is %s\n",
+				"The prior announced hand is:\n%s\n",
 				handThatPreviousPlayerSaidHeHad
 		);
 		System.out.printf(
-				"Do you accept the hand %s from the player? " +
-				"Press Y to accept\n",
+				"Do you accept the %s from the player? " +
+				"Press Y to accept, or anything else to reject\n",
 				announcedHand
 		);
 		String answer = scanner.next();
@@ -228,13 +240,18 @@ public class LiarDice {
 	}
 
 	@NotNull
-	private String whoLosesALife(String announcedHand){
+	private String findLoser(String announcedHand){
 		if (announcedHandContainsALie(announcedHand)){
-			return "previous player";
+			System.out.printf("The real dice are %s");
+			System.out.println("The hand contained " + dice.getDice());
+			return "announcer";
 		}
 		else{
-			return "current player";
+			System.out.printf("The real dice are %s");
+			System.out.println("The hand contained " + dice.getDice());
+			return "caller";
 		}
+
 	}
 
 	private boolean announcedHandContainsALie(String announcedHand){
