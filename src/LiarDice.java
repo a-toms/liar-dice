@@ -72,7 +72,7 @@ public class LiarDice {
 
 	private void showHandThatPreviousPlayerSaidHeHad(){
 		System.out.printf(
-				"The previous player said that he had %s",
+				"The previous player said that he had:\n%s\n",
 				handThatPreviousPlayerSaidHeHad
 		);
 	}

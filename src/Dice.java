@@ -73,7 +73,7 @@ public class Dice extends RollClassifier {
 
 
 	public void printDice(){
-		System.out.print("Dice:\t\t");
+		System.out.print("Actual dice:\t\t");
 		for (int die : realDice){
 			System.out.print(die + "\t");
 		}
