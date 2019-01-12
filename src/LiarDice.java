@@ -99,7 +99,7 @@ public class LiarDice {
 
 		//Choose hand to announce
 		System.out.printf(
-				"Enter the %d hand to announce to the next player\n",
+				"Enter the %d dice to announce to the next player\n",
 				numberOfDice
 		);
 		String announcedHand = scanner.next();
@@ -123,20 +123,15 @@ public class LiarDice {
 					"to the next player. Repeating question..."
 			);
 			return chooseHandToAnnounce();
-		}
-		System.out.println(
-				"Got it. You will tell the other player that you have: "
-				+ announcedHand
-		);
+		};
 
 		//Check announced hand higher than previous
 		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
 			if (rollClassifier.isHandHigher(handThatPreviousPlayerSaidHeHad, announcedHand)){
 				System.out.printf(
-						"The hand that you proposed to announce, %s, " +
-						"must have a higher rank than the hand that the" +
-						"the previous player announced (%s). " +
-						"Repeating question...",
+						"Unfortunately, the hand that you proposed to announce," +
+						"%s,\nmust have a higher rank than the hand that the\n" +
+						"previous player announced, %s. Repeating question...\n",
 						announcedHand, handThatPreviousPlayerSaidHeHad);
 				return chooseHandToAnnounce();
 			}
