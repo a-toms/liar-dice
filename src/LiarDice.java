@@ -64,13 +64,12 @@ public class LiarDice {
 		System.out.println("Player X, press enter to show the dice");
 		scanner.nextLine();
 		dice.printDice();
-		// Todo: continue
-		//if (Player.decideToRollDice()){
 
-			// choose which dice to roll. You may roll any of the dice.
 		}
 		//System.out.println("!true");
 		// announce dice
+
+
 
 	public void gameLoop(){
 		// create dice

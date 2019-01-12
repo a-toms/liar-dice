@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 
-// Todo: add RollClassifier as a parent to Dice
+
 public class Dice extends RollClassifier {
 
 	int numberOfDice;
@@ -63,23 +63,6 @@ public class Dice extends RollClassifier {
 		return indices;
 	}
 
-//Todo: check if there is a simple return all indices method. See ArrayUtils.
-//	public int getIndicesOfDiceToRoll(int[] diceToRoll){
-//		ArrayList<Integer> indices = new ArrayList<>();
-//		// Todo: test whether this works.
-//		//  realDice=13212. diceToRoll=2321 -> indices[2, 1, 4, 0]
-//		for (int i = 0; i < diceToRoll.length; i++){
-//			if (indices.contains(getIndex(diceToRoll[i]))){
-//				indices.add(getIndex(diceToRoll[i], i));
-//			}
-//			else {
-//				indices.add(getIndex(diceToRoll[i]));
-//			}
-//
-//
-//		}
-//	}
-
 	public boolean containsDie(Integer die){
 		return realDice.contains(die);
 	}
@@ -93,9 +76,5 @@ public class Dice extends RollClassifier {
 		System.out.println("\n");
 	}
 
-	public String getString() {
-		//Todo: remove brackets and extra from below output
-		return realDice.toString();
-	}
 
 }
