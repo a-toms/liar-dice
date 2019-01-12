@@ -15,6 +15,8 @@ public class Dice extends RollClassifier {
 	int rank;
 
 	public static void main(String[] args) {
+
+
 	}
 
 	public Dice(int nDice){
@@ -27,7 +29,7 @@ public class Dice extends RollClassifier {
 
 	public void rollAllDice(){
 		for (int i = 0; i < numberOfDice; i++){
-			rollDie(i);
+			realDice.add(i, random.nextInt(6) + 1);
 		}
 	}
 
@@ -41,8 +43,8 @@ public class Dice extends RollClassifier {
 
 	}
 
-	public void rollDie(int index){
-		realDice.add(index, random.nextInt(6) + 1);
+	public void rollDie(Integer die){
+		realDice.add(getIndexOf(die), random.nextInt(6) + 1);
 	}
 
 	public int getIndexOf(Integer die){
@@ -51,8 +53,10 @@ public class Dice extends RollClassifier {
 				return i;
 			}
 		}
+		System.out.println("Error: Dice/getIndexOf()");
 		return -1;
 	}
+
 	public ArrayList<Integer> getIndicesOf(Integer die){
 		ArrayList<Integer> indices = new ArrayList<>();
 		for (int i = 0; i < realDice.size(); i++) {
@@ -65,6 +69,10 @@ public class Dice extends RollClassifier {
 
 	public boolean containsDie(Integer die){
 		return realDice.contains(die);
+	}
+
+	public boolean containsMoreThanOneOf(Integer die){
+		return getIndicesOf(die).size() > 1;
 	}
 
 
