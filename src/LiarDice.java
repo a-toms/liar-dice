@@ -12,12 +12,15 @@ public class LiarDice {
 	ArrayList<Player> players;
 	Scanner scanner;
 	Dice dice;
-	String HandThatPreviousPlayerSaysHeHas;
+	String handThatPreviousPlayerSaidHeHad;
+	RollClassifier rollClassifier;
 
 	public static void main(String[] args) {
 		LiarDice liarDice = new LiarDice();
 		liarDice.addPlayers(5);
-		liarDice.getPlayerAction();
+		liarDice.dice.setAllDice("22315");
+		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
+		liarDice.askPlayerForActions();
 
 
 	}
@@ -26,8 +29,10 @@ public class LiarDice {
 		numberOfDice = 5;
 		scanner = new Scanner(System.in);
 		dice = new Dice(numberOfDice);
-		HandThatPreviousPlayerSaysHeHas = new String();
+		rollClassifier = new RollClassifier(numberOfDice);
+		handThatPreviousPlayerSaidHeHad = new String();
 		players = new ArrayList<>();
+
 
 	}
 
@@ -55,13 +60,35 @@ public class LiarDice {
 		return lifeCounter >= 2;
 	}
 
-	private void getPlayerAction() {
-		System.out.println("Player X, press enter to show the dice");
-		scanner.nextLine();
+	private void askPlayerForActions() {
+		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+			showHandThatPreviousPlayerSaidHeHad();
+		}
+		System.out.println("Player 1, the dice are:");
 		dice.printDice();
-		chooseDiceToRoll();
-		String announcedHand = chooseHandToAnnounce();
+		getActions();
 
+	}
+
+	private void showHandThatPreviousPlayerSaidHeHad(){
+		System.out.printf(
+				"The previous player said that he had %s",
+				handThatPreviousPlayerSaidHeHad
+		);
+	}
+
+	private void getActions(){
+		if (playerWantsToRollDice()){
+			rollChoseDice();
+		}
+		chooseHandToAnnounce();
+	}
+
+
+	private boolean playerWantsToRollDice(){
+		System.out.println("Press Y if you would like to roll any dice");
+		String decision = scanner.next();
+		return decision.toUpperCase().equals("Y");
 	}
 
 	private String chooseHandToAnnounce(){
@@ -69,8 +96,10 @@ public class LiarDice {
 				"The dice that you have are:"
 		);
 		dice.printDice();
+
+		//Choose hand to announce
 		System.out.printf(
-				"Enter the %d dice to announce to the next player\n",
+				"Enter the %d hand to announce to the next player\n",
 				numberOfDice
 		);
 		String announcedHand = scanner.next();
@@ -81,9 +110,11 @@ public class LiarDice {
 			);
 			return chooseHandToAnnounce();
 		}
+
+		//Confirmation
 		System.out.println(
-				"Press Y if the dice that you want to announce to " +
-				"the next player are: " + announcedHand
+				"Press Y if the hand that you want to announce to " +
+				"the next player is: " + announcedHand
 		);
 		String confirm = scanner.next();
 		if (!confirm.toUpperCase().equals("Y")) {
@@ -97,10 +128,26 @@ public class LiarDice {
 				"Got it. You will tell the other player that you have: "
 				+ announcedHand
 		);
+
+		//Check announced hand higher than previous
+		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+			if (rollClassifier.isHandHigher(handThatPreviousPlayerSaidHeHad, announcedHand)){
+				System.out.printf(
+						"The hand that you proposed to announce, %s, " +
+						"must have a higher rank than the hand that the" +
+						"the previous player announced (%s). " +
+						"Repeating question...",
+						announcedHand, handThatPreviousPlayerSaidHeHad);
+				return chooseHandToAnnounce();
+			}
+		}
 		return announcedHand;
 	}
 
-	private void chooseDiceToRoll(){
+
+
+
+	private void rollChoseDice(){
 		System.out.println(
 				"The dice that you have are:"
 		);
@@ -108,15 +155,12 @@ public class LiarDice {
 		System.out.println("Enter the dice that you want to roll");
 		String chosenDice = scanner.next();
 
-
-		//Put dice to roll in AL I
+		//Put dice to roll in toRoll
 		ArrayList<Integer> toRoll = new ArrayList<>();
 		for (int i = 0; i < chosenDice.length(); i++) {
 			Integer die = Character.getNumericValue(chosenDice.charAt(i));
 			toRoll.add(die);
 		}
-
-		System.out.println("Chosen dice to roll = " + toRoll);
 
 		// roll all dice in toRoll
 		for (Integer die : dice.getDice()){

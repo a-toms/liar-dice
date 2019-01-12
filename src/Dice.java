@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 
 
@@ -33,10 +32,13 @@ public class Dice extends RollClassifier {
 		return realDice;
 	}
 
-	public void setRealDice(ArrayList<Integer> testDice) {
-		// Method for testing. This will not be used in the game.
-		realDice = testDice;
-
+	public void setAllDice(String s) {
+		// Primarily intended for testing.
+		ArrayList<Integer> replacementDice = new ArrayList<>();
+		for (int i = 0; i < s.length(); i++) {
+			replacementDice.add(Character.getNumericValue(s.charAt(i)));
+		}
+		realDice = replacementDice;
 	}
 
 	public void roll(Integer die){

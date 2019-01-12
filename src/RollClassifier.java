@@ -13,8 +13,8 @@ public class RollClassifier {
 		orderRollsByRank(n_dice);
 	}
 
-	public boolean isRollHigher(String rollA, String rollB){
-		return getRank(rollA) > getRank(rollB);
+	public boolean isHandHigher(String handA, String handB){
+		return getRank(handA) > getRank(handB);
 	}
 
 	public Integer getRank(String roll){
@@ -207,7 +207,7 @@ public class RollClassifier {
 	}
 
 	private boolean hasHighNumber(String candidate){
-		for (int i = 1; i <=5; i++){
+		for (int i = 1; i <= 5; i++){
 			if (hasNPairs(candidate, i)){
 				return false;
 
