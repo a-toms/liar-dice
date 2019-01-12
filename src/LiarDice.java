@@ -15,15 +15,6 @@ public class LiarDice {
 	String handThatPreviousPlayerSaidHeHad;
 	RollClassifier rollClassifier;
 
-	public static void main(String[] args) {
-		LiarDice liarDice = new LiarDice();
-		liarDice.addPlayers(5);
-		liarDice.dice.setAllDice("22315");
-		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
-		liarDice.askPlayerForActions();
-
-
-	}
 
 	public LiarDice() {
 		numberOfDice = 5;
@@ -32,8 +23,6 @@ public class LiarDice {
 		rollClassifier = new RollClassifier(numberOfDice);
 		handThatPreviousPlayerSaidHeHad = new String();
 		players = new ArrayList<>();
-
-
 	}
 
 	public void getNumberOfPlayers() {
@@ -84,7 +73,6 @@ public class LiarDice {
 		chooseHandToAnnounce();
 	}
 
-
 	private boolean playerWantsToRollDice(){
 		System.out.println("Press Y if you would like to roll any dice");
 		String decision = scanner.next();
@@ -127,7 +115,9 @@ public class LiarDice {
 
 		//Check announced hand higher than previous
 		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
-			if (rollClassifier.isHandHigher(handThatPreviousPlayerSaidHeHad, announcedHand)){
+			if (rollClassifier.isHandHigher(
+					handThatPreviousPlayerSaidHeHad, announcedHand)
+			){
 				System.out.printf(
 						"Unfortunately, the hand that you proposed to announce," +
 						"%s,\nmust have a higher rank than the hand that the\n" +
@@ -138,9 +128,6 @@ public class LiarDice {
 		}
 		return announcedHand;
 	}
-
-
-
 
 	private void rollChoseDice(){
 		System.out.println(
@@ -164,51 +151,90 @@ public class LiarDice {
 				toRoll.remove(die);
 			}
 		}
-
 		System.out.println("You rolled the dice to give:");
 		dice.printDice();
-
-
-
-
 	}
 
 
 
 
 	public void gameLoop(){
-		// create dice
+		ListIterator<Player> playersIterator = players.listIterator();
+
 		while (atLeastTwoPlayersHaveOneLifeRemaining()){
-			ListIterator<Player> playersIterator = players.listIterator();
-			while (playersIterator.hasNext()){
-				if (!atLeastTwoPlayersHaveOneLifeRemaining()){
-					break;
-				}
-				Player nextPlayer = playersIterator.next();
-				/// Todo: Insert player decisions below
-
-
-				System.out.println("Enter 1 to remove life from" + nextPlayer);
-				int command = scanner.nextInt();
-				if (command == 1){
-					nextPlayer.loseLife();
-					playersIterator.remove();
-				}
-
+			if (!atLeastTwoPlayersHaveOneLifeRemaining()){
+				break;
 			}
+			Player currentPlayer = playersIterator.next();
+			/// Todo: Insert player decisions below
+
+
+			// Result of accept or refect
+
+
+//			if (1){
+//				currentPlayer.loseLife();
+//				if (currentPlayer.hasNoLivesLeft()){
+//					playersIterator.remove();
+//			}
+//			if
+//
+//			}
 
 
 		}
-		// select next player
-		// press button to show the dice
-		// choose any dice to roll
-		// announce hand -> pass hand to the next person
-		// next player accepts or rejects
-		// if reject, subtract the life
-		// next player's turn
-
 
 
 	}
 
+
+
+	public static void main(String[] args) {
+		LiarDice liarDice = new LiarDice();
+		liarDice.addPlayers(5);
+		liarDice.dice.setAllDice("22315");
+		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
+		liarDice.askPlayerForActions();
+
+
+	}
+
+	private String acceptOrReject(String announcedHand){
+		System.out.printf(
+				"The player asked you to accept the hand %s\n",
+				announcedHand
+		);
+		System.out.printf(
+				"The prior announced hand is %s\n",
+				handThatPreviousPlayerSaidHeHad
+		);
+		System.out.printf(
+				"Do you accept the hand %s from the player? " +
+				"Press Y to accept\n",
+				announcedHand
+		);
+		String answer = scanner.next();
+		if (answer.toUpperCase().equals("Y")){
+			System.out.println("You accept the player's hand");
+			handThatPreviousPlayerSaidHeHad = announcedHand;
+			return "accept";
+		}
+		else{
+			System.out.println("You reject the player's hand");
+			return "reject";
+		}
+	}
+
+	private void whoLosesALife{
+		if
+
+	}
+
+	private boolean announcedHandContainsALie(String announcedHand){
+		/* Concludes that a hand is not a lie if the announcedHand
+		return rollClassifier.isHandHigher(
+				dice.getReal
+				announcedHand
+		);
+	}
 }

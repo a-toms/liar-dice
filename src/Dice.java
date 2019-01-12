@@ -7,12 +7,6 @@ public class Dice extends RollClassifier {
 	int numberOfDice;
 	private ArrayList<Integer> realDice;
 	Random random;
-	int rank;
-
-	public static void main(String[] args) {
-
-
-	}
 
 	public Dice(int nDice){
 		super(nDice);
@@ -39,6 +33,13 @@ public class Dice extends RollClassifier {
 			replacementDice.add(Character.getNumericValue(s.charAt(i)));
 		}
 		realDice = replacementDice;
+	}
+
+	public void getString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Integer die: realDice){
+
+		}
 	}
 
 	public void roll(Integer die){

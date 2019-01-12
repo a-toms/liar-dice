@@ -25,9 +25,7 @@ public class Player {
 
 	private void chooseDice(){
 		String dice = scanner.next();
-
 	}
-
 
 	private void printOptions(){
 		System.out.println(
@@ -54,6 +52,10 @@ public class Player {
 
 	public void loseLife(){
 		livesLeft--;
+	}
+
+	public boolean hasNoLivesLeft(){
+		return livesLeft < 1;
 	}
 
 }
