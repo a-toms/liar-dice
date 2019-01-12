@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Scanner;
@@ -195,7 +197,7 @@ public class LiarDice {
 		liarDice.dice.setAllDice("22315");
 		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
 		liarDice.askPlayerForActions();
-
+		//Todo: implement acceptOrReject
 
 	}
 
@@ -225,15 +227,22 @@ public class LiarDice {
 		}
 	}
 
-	private void whoLosesALife{
-		if
-
+	@NotNull
+	private String whoLosesALife(String announcedHand){
+		if (announcedHandContainsALie(announcedHand)){
+			return "previous player";
+		}
+		else{
+			return "current player";
+		}
 	}
 
 	private boolean announcedHandContainsALie(String announcedHand){
-		/* Concludes that a hand is not a lie if the announcedHand
+		/* Concludes that a hand is not a lie if the announcedHand <= realDice.
+		This defines a "lie" based on rankings, rather than dice. Ask about this.
+		 */
 		return rollClassifier.isHandHigher(
-				dice.getReal
+				dice.getString(),
 				announcedHand
 		);
 	}

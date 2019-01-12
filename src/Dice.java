@@ -8,6 +8,10 @@ public class Dice extends RollClassifier {
 	private ArrayList<Integer> realDice;
 	Random random;
 
+
+	public static void main(String[] args) {
+
+	}
 	public Dice(int nDice){
 		super(nDice);
 		random = new Random();
@@ -35,11 +39,12 @@ public class Dice extends RollClassifier {
 		realDice = replacementDice;
 	}
 
-	public void getString(){
+	public String getString(){
 		StringBuilder stringBuilder = new StringBuilder();
 		for (Integer die: realDice){
-
+			stringBuilder.append(die);
 		}
+		return stringBuilder.toString();
 	}
 
 	public void roll(Integer die){
