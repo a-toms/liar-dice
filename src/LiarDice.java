@@ -1,5 +1,3 @@
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Scanner;
@@ -108,33 +106,26 @@ public class LiarDice {
 		);
 		dice.printDice();
 		System.out.println("Enter the dice that you want to roll");
-		String diceToRoll = scanner.next();
+		String chosenDice = scanner.next();
 
 
-		for (int i = 0; i < diceToRoll.length(); i++){
-			Integer chosenDieToRoll = Character.getNumericValue(
-					diceToRoll.charAt(i)
-			);
-			System.out.println("Chosen dice to roll = " + chosenDieToRoll);
-
-
-
-			if (dice.containsMoreThanOneOf(chosenDieToRoll)){
-				//roll multiple dice
-
-
-			}
-
-
-			else{
-				// roll one dice
-				dice.rollDie(chosenDieToRoll);
-
-			}
-
+		//Put dice to roll in AL I
+		ArrayList<Integer> toRoll = new ArrayList<>();
+		for (int i = 0; i < chosenDice.length(); i++) {
+			Integer die = Character.getNumericValue(chosenDice.charAt(i));
+			toRoll.add(die);
 		}
 
-		// Show dice after roll
+		System.out.println("Chosen dice to roll = " + toRoll);
+
+		// roll all dice in toRoll
+		for (Integer die : dice.getDice()){
+			if (toRoll.contains(die)){
+				dice.roll(die);
+				toRoll.remove(die);
+			}
+		}
+
 		System.out.println("You rolled the dice to give:");
 		dice.printDice();
 

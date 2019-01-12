@@ -1,8 +1,4 @@
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -24,16 +20,16 @@ public class Dice extends RollClassifier {
 		random = new Random();
 		numberOfDice = nDice;
 		realDice = new ArrayList<>(numberOfDice);
-		rollAllDice();
+		rollAll();
 	}
 
-	public void rollAllDice(){
+	public void rollAll(){
 		for (int i = 0; i < numberOfDice; i++){
 			realDice.add(i, random.nextInt(6) + 1);
 		}
 	}
 
-	public ArrayList<Integer> getRealDice() {
+	public ArrayList<Integer> getDice() {
 		return realDice;
 	}
 
@@ -43,7 +39,7 @@ public class Dice extends RollClassifier {
 
 	}
 
-	public void rollDie(Integer die){
+	public void roll(Integer die){
 		Integer rolledDie = random.nextInt(6) + 1;
 		System.out.printf(
 				"Rolled %d to give %d\n", die, rolledDie
