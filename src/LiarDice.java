@@ -61,6 +61,7 @@ public class LiarDice {
 		System.out.println("Player X, press enter to show the dice");
 		scanner.nextLine();
 		dice.printDice();
+		chooseDiceToRoll();
 		String announcedHand = chooseHandToAnnounce();
 
 	}
@@ -84,7 +85,8 @@ public class LiarDice {
 		}
 		System.out.println(
 				"Press Y if the dice that you want to announce to " +
-				"the next player are: " + announcedHand);
+				"the next player are: " + announcedHand
+		);
 		String confirm = scanner.next();
 		if (!confirm.toUpperCase().equals("Y")) {
 			System.out.println(
@@ -108,10 +110,12 @@ public class LiarDice {
 		System.out.println("Enter the dice that you want to roll");
 		String diceToRoll = scanner.next();
 
-		// Get indices of dice to roll
-		ArrayList<Integer> indicesOfRolledDice = new ArrayList<>();
+
 		for (int i = 0; i < diceToRoll.length(); i++){
-			Integer chosenDieToRoll = Integer.valueOf(diceToRoll.charAt(i));
+			Integer chosenDieToRoll = Character.getNumericValue(
+					diceToRoll.charAt(i)
+			);
+			System.out.println("Chosen dice to roll = " + chosenDieToRoll);
 
 
 
@@ -125,6 +129,7 @@ public class LiarDice {
 			else{
 				// roll one dice
 				dice.rollDie(chosenDieToRoll);
+
 			}
 
 		}

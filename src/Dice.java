@@ -44,17 +44,15 @@ public class Dice extends RollClassifier {
 	}
 
 	public void rollDie(Integer die){
-		realDice.add(getIndexOf(die), random.nextInt(6) + 1);
+		Integer rolledDie = random.nextInt(6) + 1;
+		System.out.printf(
+				"Rolled %d to give %d\n", die, rolledDie
+		);
+		realDice.set(getIndexOf(die), rolledDie);
 	}
 
 	public int getIndexOf(Integer die){
-		for (int i = 0; i < realDice.size(); i++) {
-			if (realDice.get(i).equals(die)){
-				return i;
-			}
-		}
-		System.out.println("Error: Dice/getIndexOf()");
-		return -1;
+		return realDice.indexOf(die);
 	}
 
 	public ArrayList<Integer> getIndicesOf(Integer die){
