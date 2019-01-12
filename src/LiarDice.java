@@ -89,7 +89,8 @@ public class LiarDice {
 		if (!confirm.toUpperCase().equals("Y")) {
 			System.out.println(
 					"You did not confirm that you want to announce the dice " +
-					"to the next player. Repeating question...");
+					"to the next player. Repeating question..."
+			);
 			return chooseHandToAnnounce();
 		}
 		System.out.println(
