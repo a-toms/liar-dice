@@ -1,8 +1,6 @@
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.ListIterator;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class LiarDice {
@@ -29,10 +27,7 @@ public class LiarDice {
 		players = new ArrayList<>();
 	}
 
-	public void getNumberOfPlayers() {
-		System.out.println("Enter the number of players in the game");
-		numberOfPlayers = scanner.nextInt();
-		addPlayers(numberOfPlayers);
+	public void printNumberOfPlayers() {
 		System.out.printf("The game has %d players", players.size());
 	}
 
@@ -51,6 +46,18 @@ public class LiarDice {
 			}
 		}
 		return lifeCounter >= 2;
+	}
+
+	private Player getGameWinner(){
+		if (atLeastTwoPlayersHaveOneLifeRemaining()){
+			return null;
+		}
+		for (Player player : players){
+			if (!player.hasNoLivesLeft()){
+				return player;
+			}
+		}
+		return null;
 	}
 
 	private String getAnnouncedHand() {
@@ -164,41 +171,35 @@ public class LiarDice {
 		dice.printDice();
 	}
 
-
-
-
-
-	public void gameLoop(){
-		ListIterator<Player> playersIterator = players.listIterator();
-
-		while (atLeastTwoPlayersHaveOneLifeRemaining()){
-			if (!atLeastTwoPlayersHaveOneLifeRemaining()){
-				break;
-			}
-			Player currentPlayer = playersIterator.next();
-			Player previousPlayer = playersIterator.previous();
-			System.out.println(currentPlayer);
-			System.out.println(currentPlayer.name);
-			System.out.println(previousPlayer);
-			System.out.println(previousPlayer.name);
-			break;
+	public void gameLoop() {
+		while (atLeastTwoPlayersHaveOneLifeRemaining()) {
+			Player current = players.get(2);
+			System.out.println("\n" + current.name);
+			current.loseLife();
+			System.out.println(
+					current.name + " loses a life. " + current.name +
+					" has " + current.getLivesLeft() + " lives left"
+			);
+			Collections.rotate(players, -1);
+			current = players.get(0);
 		}
+		System.out.println("Game ends. ");
+		System.out.println("The winner is " + getGameWinner().name);
 	}
-
-
 
 	public static void main(String[] args) {
 		LiarDice liarDice = new LiarDice();
 		liarDice.addPlayers(5);
 		liarDice.dice.setAllDice("22315");
 		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
+		liarDice.printNumberOfPlayers();
 //		String announcedHand = liarDice.getAnnouncedHand();
 //		String answer = liarDice.acceptOrReject(announcedHand);
 //		if (answer.equals("accept")){
 //			// next turn
 //		}
 //		if (answer.equals("reject")){
-//			String loser = liarDice.findLoser(announcedHand);
+//			String loser = liarDice.findHandLoser(announcedHand);
 //			System.out.println(loser + " loses a life");
 //		}
 		liarDice.gameLoop();
@@ -236,7 +237,7 @@ public class LiarDice {
 	}
 
 	@NotNull
-	private String findLoser(String announcedHand){
+	private String findHandLoser(String announcedHand){
 		if (announcedHandContainsALie(announcedHand)){
 			System.out.printf("The real dice are %s, ", dice.getDice());
 			return "announcer";
