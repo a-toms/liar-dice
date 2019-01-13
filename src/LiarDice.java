@@ -60,7 +60,7 @@ public class LiarDice {
 		System.out.println("Player 1, the dice are:");
 		dice.printDice();
 		if (playerWantsToRollDice()){
-			rollChoseDice();
+			rollChosenDice();
 		}
 		return chooseHandToAnnounce();
 	}
@@ -132,7 +132,13 @@ public class LiarDice {
 		return announcedHand;
 	}
 
-	private void rollChoseDice(){
+	private void printInvalidInput(){
+		System.out.println(
+				"Unfortunately your input is invalid. Repeating question..."
+		);
+	}
+
+	private void rollChosenDice(){
 		System.out.println(
 				"The dice that you have are:"
 		);
@@ -161,6 +167,7 @@ public class LiarDice {
 
 
 
+
 	public void gameLoop(){
 		ListIterator<Player> playersIterator = players.listIterator();
 
@@ -169,25 +176,13 @@ public class LiarDice {
 				break;
 			}
 			Player currentPlayer = playersIterator.next();
-			/// Todo: Insert player decisions below
-
-
-			// Result of accept or refect
-
-
-//			if (1){
-//				currentPlayer.loseLife();
-//				if (currentPlayer.hasNoLivesLeft()){
-//					playersIterator.remove();
-//			}
-//			if
-//
-//			}
-
-
+			Player previousPlayer = playersIterator.previous();
+			System.out.println(currentPlayer);
+			System.out.println(currentPlayer.name);
+			System.out.println(previousPlayer);
+			System.out.println(previousPlayer.name);
+			break;
 		}
-
-
 	}
 
 
@@ -197,15 +192,16 @@ public class LiarDice {
 		liarDice.addPlayers(5);
 		liarDice.dice.setAllDice("22315");
 		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
-		String announcedHand = liarDice.getAnnouncedHand();
-		String answer = liarDice.acceptOrReject(announcedHand);
-		if (answer.equals("accept")){
-			// next turn
-		}
-		if (answer.equals("reject")){
-			String loser = liarDice.findLoser(announcedHand);
-			System.out.println(loser + " loses a life");
-		}
+//		String announcedHand = liarDice.getAnnouncedHand();
+//		String answer = liarDice.acceptOrReject(announcedHand);
+//		if (answer.equals("accept")){
+//			// next turn
+//		}
+//		if (answer.equals("reject")){
+//			String loser = liarDice.findLoser(announcedHand);
+//			System.out.println(loser + " loses a life");
+//		}
+		liarDice.gameLoop();
 		//todo: 1. subtract life from loser 2. implement game loop
 
 
@@ -242,13 +238,11 @@ public class LiarDice {
 	@NotNull
 	private String findLoser(String announcedHand){
 		if (announcedHandContainsALie(announcedHand)){
-			System.out.printf("The real dice are %s");
-			System.out.println("The hand contained " + dice.getDice());
+			System.out.printf("The real dice are %s, ", dice.getDice());
 			return "announcer";
 		}
 		else{
-			System.out.printf("The real dice are %s");
-			System.out.println("The hand contained " + dice.getDice());
+			System.out.printf("The real dice are %s, ", dice.getDice());
 			return "caller";
 		}
 
@@ -263,4 +257,26 @@ public class LiarDice {
 				announcedHand
 		);
 	}
+
+	public static boolean containsOnlyIntegers(String s) {
+		for (int i = 0; i < s.length(); i++) {
+			Character character = s.charAt(i);
+			if (!isInteger(character)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean isInteger(Character c) {
+		boolean isValidInteger = false;
+		try{
+			Character.getNumericValue(c);
+			isValidInteger = true;
+		}
+		catch (NumberFormatException ex) {
+		}
+		return isValidInteger;
+	}
 }
+
