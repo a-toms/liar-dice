@@ -13,7 +13,7 @@ public class LiarDice {
 	Scanner scanner;
 	Dice dice;
 	String announcedHand;
-	String handThatPreviousPlayerSaidHeHad;
+	String previousAnnouncedHand;
 	RollClassifier rollClassifier;
 
 
@@ -23,7 +23,7 @@ public class LiarDice {
 		dice = new Dice(numberOfDice);
 		rollClassifier = new RollClassifier(numberOfDice);
 		announcedHand = new String();
-		handThatPreviousPlayerSaidHeHad = new String();
+		previousAnnouncedHand = new String();
 		players = new ArrayList<>();
 	}
 
@@ -61,12 +61,15 @@ public class LiarDice {
 	}
 
 	private String getAnnouncedHand() {
-		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+		if (!previousAnnouncedHand.isEmpty()){
 			showHandThatPreviousPlayerSaidHeHad();
 		}
-		System.out.println("The dice are:");
 		dice.printDice();
-		if (playerWantsToRollDice()){
+
+		/* If there is no previous announced hand, the player cannot roll the
+		dice. This is because it is the first throw of the new round.
+		 */
+		if (!previousAnnouncedHand.isEmpty() && playerWantsToRollDice()){
 			rollChosenDice();
 		}
 		return chooseHandToAnnounce();
@@ -74,8 +77,7 @@ public class LiarDice {
 
 	private void showHandThatPreviousPlayerSaidHeHad(){
 		System.out.printf(
-				"The previous player said that he had:\n%s\n",
-				handThatPreviousPlayerSaidHeHad
+				"The previous player said that he had:\n%s\n", previousAnnouncedHand
 		);
 	}
 
@@ -87,42 +89,49 @@ public class LiarDice {
 
 
 
-
+	// Todo: partition this method.
 	private String chooseHandToAnnounce(){
-		System.out.println(
-				"The dice that you have are:"
-		);
-		dice.printDice();
+//		System.out.println("Press enter to show the dice:");
+//		scanner.nextLine();
+//		dice.printDice();
 
-		//Choose hand to announce
-		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+		// Choose hand to announce
+
+		if (!previousAnnouncedHand.isEmpty()){
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		System.out.printf(
 				"Enter the %d dice to announce to the next player\n",
 				numberOfDice
 		);
-		String announcedHand = scanner.next();
-		if (announcedHand.length() != numberOfDice) {
+		String newAnnouncedHand = scanner.next();
+		if (newAnnouncedHand.length() != numberOfDice) {
 			System.out.printf(
 					"You did not enter %d dice. Asking again...\n",
 					numberOfDice
 			);
 			return chooseHandToAnnounce();
 		}
-		if (!rollClassifier.isHandHigher(handThatPreviousPlayerSaidHeHad, announcedHand)){
+
+		//Check announced hand higher than previous hand
+		if (!previousAnnouncedHand.isEmpty()){
+			if (rollClassifier.isFirstHandHigherThanSecond(
+					newAnnouncedHand, previousAnnouncedHand
+			)){
 			System.out.printf(
 					"Unfortunately, the hand that you proposed to announce, " +
-							"%s,\n does not have a higher rank than the hand that the\n" +
-							"previous player announced, %s. \nRepeating question...\n\n",
-					announcedHand, handThatPreviousPlayerSaidHeHad);
+					"%s,\n does not have a higher rank than the hand that the\n" +
+					"previous player announced, %s. \nRepeating question...\n\n",
+					newAnnouncedHand, previousAnnouncedHand);
 			return chooseHandToAnnounce();
+			}
 		}
 
-		//Confirmation
+		// Confirmation
+
 		System.out.println(
 				"Press Y if the hand that you want to announce to " +
-				"the next player is: " + announcedHand
+				"the next player is: " + newAnnouncedHand
 		);
 		String confirm = scanner.next();
 		if (!confirm.toUpperCase().equals("Y")) {
@@ -133,19 +142,9 @@ public class LiarDice {
 			return chooseHandToAnnounce();
 		};
 
-		//Check announced hand higher than previous
-		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
-			if (!rollClassifier.isHandHigher(
-					handThatPreviousPlayerSaidHeHad, announcedHand)){
-				System.out.printf(
-						"Unfortunately, the hand that you proposed to announce, " +
-						"%s,\n does not have a higher rank than the hand that the\n" +
-						"previous player announced, %s. \nRepeating question...\n\n",
-						announcedHand, handThatPreviousPlayerSaidHeHad);
-				return chooseHandToAnnounce();
-			}
-		}
-		return announcedHand;
+
+		clearScreen();
+		return newAnnouncedHand;
 	}
 
 	private void printInvalidInput(){
@@ -189,25 +188,42 @@ public class LiarDice {
 
 			Player announcer = getNextPlayerFrom(0);
 			Player responder = getNextPlayerFrom(1);
+
+			/*Rotate player order again if the announcer and responder
+			are the same person.*/
+			if (announcer == responder){
+				Collections.rotate(players, -1);
+				continue;
+			}
+
 			System.out.println(announcer.name);
-			System.out.println(responder.name);
+
 
 			announcedHand = getAnnouncedHand();
-			answer = acceptOrReject(announcedHand);
+
+			System.out.println(responder.name);
+			answer = acceptOrReject(announcedHand, announcer);
 
 			if (answer.equals("accept")){
-				handThatPreviousPlayerSaidHeHad = announcedHand;
+				previousAnnouncedHand = announcedHand;
 			}
 			if (answer.equals("reject")){
 				loser = findHandLoser(announcedHand);
 				if (loser.equals("announcer")){
 					announcer.loseLife();
+					announcer.displayEliminationMessageIfEliminated();
 				}
 				else{
 					responder.loseLife();
+					responder.displayEliminationMessageIfEliminated();
 				}
-				System.out.println(loser + " lost a life");
+
+				//method : resetAfterDiceRevealed
+				dice.rollAll();
+				previousAnnouncedHand = new String();
 			}
+
+			//Rotate player order for next round
 			Collections.rotate(players, -1);
 
 		}
@@ -227,8 +243,9 @@ public class LiarDice {
 	}
 
 	public static void clearScreen() {
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
+		for(int i = 0; i < 100; i++){
+			System.out.println();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -237,25 +254,25 @@ public class LiarDice {
 		liarDice.gameLoop();
 	}
 
-	private String acceptOrReject(String announcedHand){
+	private String acceptOrReject(String announcedHand, Player previousPlayer){
 		System.out.printf(
-				"The player asked you to accept the hand:\n%s\n",
+				"%s asked you to accept the hand:\n%s\n",
+				previousPlayer.name,
 				announcedHand
 		);
-		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+		if (!previousAnnouncedHand.isEmpty()){
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		System.out.printf(
-				"Do you accept the %s from the player? " +
+				"Do you accept %s from %s? " +
 				"Press Y to accept, or anything else to reject\n",
-				announcedHand
+				announcedHand,
+				previousPlayer.name
 		);
 		String answer = scanner.next();
 		if (answer.toUpperCase().equals("Y")){
 			System.out.println("You accept the player's hand");
-			System.out.println("handThat = " + handThatPreviousPlayerSaidHeHad);
-			handThatPreviousPlayerSaidHeHad = announcedHand;
-			System.out.println("handThat = " + handThatPreviousPlayerSaidHeHad);
+			previousAnnouncedHand = announcedHand;
 			return "accept";
 		}
 		else{
@@ -267,7 +284,7 @@ public class LiarDice {
 	@NotNull
 	private String findHandLoser(String announcedHand){
 		if (announcedHandContainsALie(announcedHand)){
-			System.out.printf("The real dice are %s, ", dice.getDice());
+			System.out.printf("The real dice are %s. ", dice.getDice());
 			return "announcer";
 		}
 		else{
@@ -281,9 +298,9 @@ public class LiarDice {
 		/* Concludes that a hand is not a lie if the announcedHand <= realDice.
 		This defines a "lie" based on rankings, rather than dice. Ask about this.
 		 */
-		return rollClassifier.isHandHigher(
-				dice.getString(),
-				announcedHand
+		return rollClassifier.isFirstHandHigherThanSecond(
+				announcedHand,
+				dice.getString()
 		);
 	}
 

@@ -52,10 +52,22 @@ public class Player {
 
 	public void loseLife(){
 		livesLeft--;
+		System.out.println(
+				this.name + " lost a life"
+		);
 	}
 
 	public boolean hasNoLivesLeft(){
 		return livesLeft < 1;
+	}
+
+	public void displayEliminationMessageIfEliminated(){
+		if (this.hasNoLivesLeft()){
+			System.out.println(
+					this.name +
+					" has no lives left and is eliminated from the game."
+			);
+		}
 	}
 
 	public boolean hasLivesLeft(){

@@ -19,7 +19,7 @@ public class RollClassifier {
 		System.out.println(rollClassifier.rollRank);
 	}
 
-	public boolean isHandHigher(String handA, String handB){
+	public boolean isFirstHandHigherThanSecond(String handA, String handB){
 		return getRank(handA) > getRank(handB);
 	}
 
