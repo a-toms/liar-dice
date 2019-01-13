@@ -13,6 +13,12 @@ public class RollClassifier {
 		orderRollsByRank(n_dice);
 	}
 
+	public static void main(String[] args) {
+		RollClassifier rollClassifier = new RollClassifier(5);
+		rollClassifier.generatePossibleRolls(5);
+		System.out.println(rollClassifier.rollRank);
+	}
+
 	public boolean isHandHigher(String handA, String handB){
 		return getRank(handA) > getRank(handB);
 	}

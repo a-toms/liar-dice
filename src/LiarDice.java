@@ -178,48 +178,50 @@ public class LiarDice {
 
 		while (atLeastTwoPlayersHaveOneLifeRemaining()) {
 
-			Player announcer = players.get(0);
-			System.out.println("\n" + announcer.name);
+			Player announcer = getNextPlayerFrom(0);
+			Player responder = getNextPlayerFrom(1);
+
 			announcedHand = getAnnouncedHand();
-
-			//todo: write method to get next player with a life
-			// int j;
-			//
-			// for (int i = 0; i < players.size(); i++){
-			//    if (players.get(j + i).hasLivesLeft{
-			//			return players.get(j + i);
-			//}
-
-
-			Player responder = players.get(1);
 			answer = acceptOrReject(announcedHand);
 
 			if (answer.equals("accept")){
 				Collections.rotate(players, -1);
 				continue;
 			}
-
 			if (answer.equals("reject")){
 				loser = findHandLoser(announcedHand);
-				System.out.println(loser + " loses a life");
-
-				// todo: write method to subtract life from player based on string
-				//  e.g., if loser.equals("announcer"):
-				//			announcer.loseLife
-				//        else{
-				//			responder.loseLife
+				if (loser.equals("announcer")){
+					announcer.loseLife();
+				}
+				else{
+					responder.loseLife();
+				}
+				System.out.println(loser + " lost a life");
 			}
-
 			Collections.rotate(players, -1);
 			announcer = players.get(0);
 		}
+
 
 		// Only one player remains:
 
 		System.out.println("Game ends. ");
 		System.out.println("The winner is " + getGameWinner().name);
 
+	}
 
+	public Player getNextPlayerFrom(int index){
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(index + i).hasLivesLeft()) {
+				return players.get(index + i);
+			}
+		}
+		return null;
+	}
+
+	public static void clearScreen() {
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
 	}
 
 	public static void main(String[] args) {
@@ -228,16 +230,16 @@ public class LiarDice {
 		liarDice.dice.setAllDice("22315");
 		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
 		liarDice.printNumberOfPlayers();
-//		String announcedHand = liarDice.getAnnouncedHand();
-//		String answer = liarDice.acceptOrReject(announcedHand);
-//		if (answer.equals("accept")){
-//			// next turn
-//		}
-//		if (answer.equals("reject")){
-//			String loser = liarDice.findHandLoser(announcedHand);
-//			System.out.println(loser + " loses a life");
-//		}
-		liarDice.gameLoop();
+		String announcedHand = liarDice.getAnnouncedHand();
+		String answer = liarDice.acceptOrReject(announcedHand);
+		if (answer.equals("accept")){
+			// next turn
+		}
+		if (answer.equals("reject")){
+			String loser = liarDice.findHandLoser(announcedHand);
+			System.out.println(loser + " loses a life");
+		}
+//		liarDice.gameLoop();
 		//todo: 1. implement game loop
 
 

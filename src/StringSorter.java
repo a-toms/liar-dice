@@ -13,7 +13,7 @@ public class StringSorter {
 	public static void main(String[] args) {
 		StringSorter stringSorter = new StringSorter();
 		String test1 = "4234233";
-		System.out.println(stringSorter.sortBySize(test1));
+		System.out.println(stringSorter.sortByFrequencyAndSize(test1));
 	}
 
 	public StringSorter() {
