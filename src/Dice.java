@@ -8,15 +8,11 @@ public class Dice extends RollClassifier {
 	private ArrayList<Integer> realDice;
 	Random random;
 
-
-	public static void main(String[] args) {
-
-	}
-	public Dice(int nDice){
-		super(nDice);
+	public Dice(int numberOfDice){
+		super(numberOfDice);
 		random = new Random();
-		numberOfDice = nDice;
-		realDice = new ArrayList<>(numberOfDice);
+		this.numberOfDice = numberOfDice;
+		realDice = new ArrayList<>(this.numberOfDice);
 		rollAll();
 	}
 

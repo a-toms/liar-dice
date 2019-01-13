@@ -64,7 +64,7 @@ public class LiarDice {
 		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
 			showHandThatPreviousPlayerSaidHeHad();
 		}
-		System.out.println("Player 1, the dice are:");
+		System.out.println("The dice are:");
 		dice.printDice();
 		if (playerWantsToRollDice()){
 			rollChosenDice();
@@ -95,7 +95,9 @@ public class LiarDice {
 		dice.printDice();
 
 		//Choose hand to announce
-		showHandThatPreviousPlayerSaidHeHad();
+		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+			showHandThatPreviousPlayerSaidHeHad();
+		}
 		System.out.printf(
 				"Enter the %d dice to announce to the next player\n",
 				numberOfDice
@@ -106,6 +108,14 @@ public class LiarDice {
 					"You did not enter %d dice. Asking again...\n",
 					numberOfDice
 			);
+			return chooseHandToAnnounce();
+		}
+		if (!rollClassifier.isHandHigher(handThatPreviousPlayerSaidHeHad, announcedHand)){
+			System.out.printf(
+					"Unfortunately, the hand that you proposed to announce, " +
+							"%s,\n does not have a higher rank than the hand that the\n" +
+							"previous player announced, %s. \nRepeating question...\n\n",
+					announcedHand, handThatPreviousPlayerSaidHeHad);
 			return chooseHandToAnnounce();
 		}
 
@@ -125,9 +135,8 @@ public class LiarDice {
 
 		//Check announced hand higher than previous
 		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
-			if (rollClassifier.isHandHigher(
-					handThatPreviousPlayerSaidHeHad, announcedHand)
-			){
+			if (!rollClassifier.isHandHigher(
+					handThatPreviousPlayerSaidHeHad, announcedHand)){
 				System.out.printf(
 						"Unfortunately, the hand that you proposed to announce, " +
 						"%s,\n does not have a higher rank than the hand that the\n" +
@@ -172,21 +181,22 @@ public class LiarDice {
 	}
 
 	public void gameLoop() {
-		String announcedHand = new String(); //Todo: Keep in the method as a local variable if no outside methods refer to it
-		String answer = new String();	// Todo: As above
-		String loser = new String();
+		String announcedHand;
+		String answer;
+		String loser;
 
 		while (atLeastTwoPlayersHaveOneLifeRemaining()) {
 
 			Player announcer = getNextPlayerFrom(0);
 			Player responder = getNextPlayerFrom(1);
+			System.out.println(announcer.name);
+			System.out.println(responder.name);
 
 			announcedHand = getAnnouncedHand();
 			answer = acceptOrReject(announcedHand);
 
 			if (answer.equals("accept")){
-				Collections.rotate(players, -1);
-				continue;
+				handThatPreviousPlayerSaidHeHad = announcedHand;
 			}
 			if (answer.equals("reject")){
 				loser = findHandLoser(announcedHand);
@@ -199,15 +209,12 @@ public class LiarDice {
 				System.out.println(loser + " lost a life");
 			}
 			Collections.rotate(players, -1);
-			announcer = players.get(0);
+
 		}
-
-
-		// Only one player remains:
+		// If only one player remains.
 
 		System.out.println("Game ends. ");
 		System.out.println("The winner is " + getGameWinner().name);
-
 	}
 
 	public Player getNextPlayerFrom(int index){
@@ -227,24 +234,7 @@ public class LiarDice {
 	public static void main(String[] args) {
 		LiarDice liarDice = new LiarDice();
 		liarDice.addPlayers(5);
-		liarDice.dice.setAllDice("22315");
-		liarDice.handThatPreviousPlayerSaidHeHad = "22231";
-		liarDice.printNumberOfPlayers();
-		String announcedHand = liarDice.getAnnouncedHand();
-		String answer = liarDice.acceptOrReject(announcedHand);
-		if (answer.equals("accept")){
-			// next turn
-		}
-		if (answer.equals("reject")){
-			String loser = liarDice.findHandLoser(announcedHand);
-			System.out.println(loser + " loses a life");
-		}
-//		liarDice.gameLoop();
-		//todo: 1. implement game loop
-
-
-
-
+		liarDice.gameLoop();
 	}
 
 	private String acceptOrReject(String announcedHand){
@@ -252,10 +242,9 @@ public class LiarDice {
 				"The player asked you to accept the hand:\n%s\n",
 				announcedHand
 		);
-		System.out.printf(
-				"The prior announced hand is:\n%s\n",
-				handThatPreviousPlayerSaidHeHad
-		);
+		if (!handThatPreviousPlayerSaidHeHad.isEmpty()){
+			showHandThatPreviousPlayerSaidHeHad();
+		}
 		System.out.printf(
 				"Do you accept the %s from the player? " +
 				"Press Y to accept, or anything else to reject\n",
@@ -264,7 +253,9 @@ public class LiarDice {
 		String answer = scanner.next();
 		if (answer.toUpperCase().equals("Y")){
 			System.out.println("You accept the player's hand");
+			System.out.println("handThat = " + handThatPreviousPlayerSaidHeHad);
 			handThatPreviousPlayerSaidHeHad = announcedHand;
+			System.out.println("handThat = " + handThatPreviousPlayerSaidHeHad);
 			return "accept";
 		}
 		else{
