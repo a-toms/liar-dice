@@ -183,7 +183,8 @@ public class LiarDice {
 			announcedHand = getAnnouncedHand();
 
 			//todo: write method to get next player with a life
-			// index j;
+			// int j;
+			//
 			// for (int i = 0; i < players.size(); i++){
 			//    if (players.get(j + i).hasLivesLeft{
 			//			return players.get(j + i);
@@ -201,17 +202,14 @@ public class LiarDice {
 			if (answer.equals("reject")){
 				loser = findHandLoser(announcedHand);
 				System.out.println(loser + " loses a life");
+
 				// todo: write method to subtract life from player based on string
 				//  e.g., if loser.equals("announcer"):
 				//			announcer.loseLife
-				announcer.loseLife();
-				System.out.println(
-						announcer.name + " loses a life. " + announcer.name +
-								" has " + announcer.getLivesLeft() + " lives left"
-				);
 				//        else{
 				//			responder.loseLife
 			}
+
 			Collections.rotate(players, -1);
 			announcer = players.get(0);
 		}
