@@ -172,19 +172,56 @@ public class LiarDice {
 	}
 
 	public void gameLoop() {
+		String announcedHand = new String(); //Todo: Keep in the method as a local variable if no outside methods refer to it
+		String answer = new String();	// Todo: As above
+		String loser = new String();
+
 		while (atLeastTwoPlayersHaveOneLifeRemaining()) {
-			Player current = players.get(2);
-			System.out.println("\n" + current.name);
-			current.loseLife();
-			System.out.println(
-					current.name + " loses a life. " + current.name +
-					" has " + current.getLivesLeft() + " lives left"
-			);
+
+			Player announcer = players.get(0);
+			System.out.println("\n" + announcer.name);
+			announcedHand = getAnnouncedHand();
+
+			//todo: write method to get next player with a life
+			// index j;
+			// for (int i = 0; i < players.size(); i++){
+			//    if (players.get(j + i).hasLivesLeft{
+			//			return players.get(j + i);
+			//}
+
+
+			Player responder = players.get(1);
+			answer = acceptOrReject(announcedHand);
+
+			if (answer.equals("accept")){
+				Collections.rotate(players, -1);
+				continue;
+			}
+
+			if (answer.equals("reject")){
+				loser = findHandLoser(announcedHand);
+				System.out.println(loser + " loses a life");
+				// todo: write method to subtract life from player based on string
+				//  e.g., if loser.equals("announcer"):
+				//			announcer.loseLife
+				announcer.loseLife();
+				System.out.println(
+						announcer.name + " loses a life. " + announcer.name +
+								" has " + announcer.getLivesLeft() + " lives left"
+				);
+				//        else{
+				//			responder.loseLife
+			}
 			Collections.rotate(players, -1);
-			current = players.get(0);
+			announcer = players.get(0);
 		}
+
+		// Only one player remains:
+
 		System.out.println("Game ends. ");
 		System.out.println("The winner is " + getGameWinner().name);
+
+
 	}
 
 	public static void main(String[] args) {
@@ -203,7 +240,7 @@ public class LiarDice {
 //			System.out.println(loser + " loses a life");
 //		}
 		liarDice.gameLoop();
-		//todo: 1. subtract life from loser 2. implement game loop
+		//todo: 1. implement game loop
 
 
 

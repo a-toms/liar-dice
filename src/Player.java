@@ -58,4 +58,8 @@ public class Player {
 		return livesLeft < 1;
 	}
 
+	public boolean hasLivesLeft(){
+		return livesLeft >= 1;
+	}
+
 }
