@@ -5,6 +5,12 @@ import java.util.*;
 
 public class LiarDice {
 
+	public static void main(String[] args) {
+		LiarDice liarDice = new LiarDice();
+		liarDice.addPlayers(5);
+		liarDice.gameLoop();
+	}
+
 	// Dice remain in LiarDice
 
 	int numberOfPlayers;
@@ -12,7 +18,6 @@ public class LiarDice {
 	ArrayList<Player> players;
 	Scanner scanner;
 	Dice dice;
-	String announcedHand;
 	String previousAnnouncedHand;
 	RollClassifier rollClassifier;
 
@@ -22,7 +27,6 @@ public class LiarDice {
 		scanner = new Scanner(System.in);
 		dice = new Dice(numberOfDice);
 		rollClassifier = new RollClassifier(numberOfDice);
-		announcedHand = new String();
 		previousAnnouncedHand = new String();
 		players = new ArrayList<>();
 	}
@@ -87,8 +91,6 @@ public class LiarDice {
 		return decision.toUpperCase().equals("Y");
 	}
 
-
-
 	// Todo: partition this method.
 	private String chooseHandToAnnounce(){
 //		System.out.println("Press enter to show the dice:");
@@ -116,7 +118,7 @@ public class LiarDice {
 		//Check announced hand higher than previous hand
 		if (!previousAnnouncedHand.isEmpty()){
 			if (rollClassifier.isFirstHandHigherThanSecond(
-					newAnnouncedHand, previousAnnouncedHand
+					previousAnnouncedHand, newAnnouncedHand
 			)){
 			System.out.printf(
 					"Unfortunately, the hand that you proposed to announce, " +
@@ -248,11 +250,7 @@ public class LiarDice {
 		}
 	}
 
-	public static void main(String[] args) {
-		LiarDice liarDice = new LiarDice();
-		liarDice.addPlayers(5);
-		liarDice.gameLoop();
-	}
+
 
 	private String acceptOrReject(String announcedHand, Player previousPlayer){
 		System.out.printf(

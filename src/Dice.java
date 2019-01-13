@@ -17,6 +17,7 @@ public class Dice extends RollClassifier {
 	}
 
 	public void rollAll(){
+		realDice = new ArrayList<>();
 		System.out.println("Rolling all of the dice");
 		for (int i = 0; i < numberOfDice; i++){
 			realDice.add(i, random.nextInt(6) + 1);
