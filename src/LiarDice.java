@@ -93,9 +93,6 @@ public class LiarDice {
 
 	// Todo: partition this method.
 	private String chooseHandToAnnounce(){
-//		System.out.println("Press enter to show the dice:");
-//		scanner.nextLine();
-//		dice.printDice();
 
 		// Choose hand to announce
 
@@ -128,23 +125,6 @@ public class LiarDice {
 			return chooseHandToAnnounce();
 			}
 		}
-
-		// Confirmation
-
-		System.out.println(
-				"Press Y if the hand that you want to announce to " +
-				"the next player is: " + newAnnouncedHand
-		);
-		String confirm = scanner.next();
-		if (!confirm.toUpperCase().equals("Y")) {
-			System.out.println(
-					"You did not confirm that you want to announce the dice " +
-					"to the next player. Repeating question..."
-			);
-			return chooseHandToAnnounce();
-		};
-
-
 		clearScreen();
 		return newAnnouncedHand;
 	}
@@ -197,9 +177,11 @@ public class LiarDice {
 				Collections.rotate(players, -1);
 				continue;
 			}
-
-			System.out.println(announcer.name);
-
+			System.out.printf(
+					"%s, enter any character to see the new dice\n",
+					announcer.name
+			);
+			scanner.next();
 
 			announcedHand = getAnnouncedHand();
 
@@ -208,6 +190,8 @@ public class LiarDice {
 
 			if (answer.equals("accept")){
 				previousAnnouncedHand = announcedHand;
+				Collections.rotate(players, -1);
+				continue;
 			}
 			if (answer.equals("reject")){
 				loser = findHandLoser(announcedHand);
@@ -220,10 +204,12 @@ public class LiarDice {
 					responder.displayEliminationMessageIfEliminated();
 				}
 
-				//method : resetAfterDiceRevealed
-				dice.rollAll();
-				previousAnnouncedHand = new String();
+
 			}
+
+			//method : resetForNewRound
+			dice.rollAll();
+			previousAnnouncedHand = new String();
 
 			//Rotate player order for next round
 			Collections.rotate(players, -1);
