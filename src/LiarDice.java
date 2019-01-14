@@ -57,7 +57,7 @@ public class LiarDice {
 			return null;
 		}
 		for (Player player : players){
-			if (!player.hasNoLivesLeft()){
+			if (player.hasLivesLeft()){
 				return player;
 			}
 		}
@@ -127,12 +127,6 @@ public class LiarDice {
 		}
 		clearScreen();
 		return newAnnouncedHand;
-	}
-
-	private void printInvalidInput(){
-		System.out.println(
-				"Unfortunately your input is invalid. Repeating question..."
-		);
 	}
 
 	private void rollChosenDice(){
@@ -236,8 +230,6 @@ public class LiarDice {
 		}
 	}
 
-
-
 	private String acceptOrReject(String announcedHand, Player previousPlayer){
 		System.out.printf(
 				"%s asked you to accept the hand:\n%s\n",
@@ -275,7 +267,6 @@ public class LiarDice {
 			System.out.printf("The real dice are %s, ", dice.getDice());
 			return "caller";
 		}
-
 	}
 
 	private boolean announcedHandContainsALie(String announcedHand){
