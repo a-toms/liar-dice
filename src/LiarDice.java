@@ -13,9 +13,9 @@ public class LiarDice {
 
 	// Dice remain in LiarDice
 
-	int numberOfPlayers;
-	int numberOfDice;
-	ArrayList<Player> players;
+	private int numberOfPlayers;
+	private int numberOfDice;
+	private ArrayList<Player> players;
 	Scanner scanner;
 	Dice dice;
 	String previousAnnouncedHand;
@@ -66,7 +66,7 @@ public class LiarDice {
 		return null;
 	}
 
-	private String getAnnouncedHand() {
+	private String setAnnouncedHand() {
 		if (!previousAnnouncedHand.isEmpty()) {
 			showHandThatPreviousPlayerSaidHeHad();
 		}
@@ -82,7 +82,10 @@ public class LiarDice {
 	}
 
 	private void showHandThatPreviousPlayerSaidHeHad() {
-		System.out.printf("The previous player said that he had:\n%s\n", previousAnnouncedHand);
+		System.out.printf(
+				"The previous player said that he had:\n%s\n",
+				previousAnnouncedHand
+		);
 	}
 
 	private boolean playerWantsToRollDice() {
@@ -97,26 +100,34 @@ public class LiarDice {
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		setNewAnnouncedHand();
+
 		// Check for correct number of dice
 		if (enteredIncorrectNumberOfDice()) {
 			return chooseHandToAnnounce();
 		}
+
 		// Check newly announced hand is higher than the previous announced hand.
 		if (newAnnouncedHandIsNotHigher()){
 			return chooseHandToAnnounce();
 		}
-		clearScreen();
+		clearScreenForNextPlayer();
 		return newAnnouncedHand;
 	}
 
 	private void setNewAnnouncedHand(){
-		System.out.printf("Enter the %d dice to announce to the next player\n", numberOfDice);
+		System.out.printf(
+				"Enter the %d dice to announce to the next player\n",
+				numberOfDice
+		);
 		newAnnouncedHand = scanner.next();
 	}
 
 	private boolean enteredIncorrectNumberOfDice(){
 		if (newAnnouncedHand.length() != numberOfDice) {
-			System.out.printf("You did not enter %d dice. Asking again...\n", numberOfDice);
+			System.out.printf(
+					"You did not enter %d dice. Asking again...\n",
+					numberOfDice
+			);
 			return true;
 		}
 		return false;
@@ -125,8 +136,11 @@ public class LiarDice {
 
 	public boolean newAnnouncedHandIsNotHigher() {
 		if (!previousAnnouncedHand.isEmpty()) {
+
+			// fixme: there is a bug here that allows the same hand to be announced as the previous announced hand.
 			if (rollClassifier.isFirstHandHigherThanSecond(
-					previousAnnouncedHand, newAnnouncedHand)) {
+					previousAnnouncedHand, newAnnouncedHand)
+			) {
 				System.out.printf(
 						"Unfortunately, the hand that you proposed to announce, " +
 						"%s,\n does not have a higher rank than the hand that " +
@@ -187,18 +201,18 @@ public class LiarDice {
 			);
 			scanner.next();
 
-			announcedHand = getAnnouncedHand();
+			setAnnouncedHand();
 
 			System.out.println(responder.name);
-			answer = acceptOrReject(announcedHand, announcer);
+			answer = acceptOrReject(announcer);
 
 			if (answer.equals("accept")){
-				previousAnnouncedHand = announcedHand;
+				previousAnnouncedHand = newAnnouncedHand;
 				Collections.rotate(players, -1);
 				continue;
 			}
 			if (answer.equals("reject")){
-				loser = findHandLoser(announcedHand);
+				loser = findHandLoser();
 				if (loser.equals("announcer")){
 					announcer.loseLife();
 					announcer.displayEliminationMessageIfEliminated();
@@ -232,31 +246,30 @@ public class LiarDice {
 		return null;
 	}
 
-	public static void clearScreen() {
+	public static void clearScreenForNextPlayer() {
 		for(int i = 0; i < 100; i++){
 			System.out.println();
 		}
 	}
 
-	private String acceptOrReject(String announcedHand, Player previousPlayer){
-		System.out.printf(
-				"%s asked you to accept the hand:\n%s\n",
-				previousPlayer.name,
-				announcedHand
-		);
+	private String acceptOrReject(Player previousPlayer){
 		if (!previousAnnouncedHand.isEmpty()){
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		System.out.printf(
+				"%s asked you to accept the hand:\n%s\n",
+				previousPlayer.name,
+				newAnnouncedHand
+		);
+		System.out.printf(
 				"Do you accept %s from %s? " +
 				"Press Y to accept, or anything else to reject\n",
-				announcedHand,
+				newAnnouncedHand,
 				previousPlayer.name
 		);
 		String answer = scanner.next();
 		if (answer.toUpperCase().equals("Y")){
 			System.out.println("You accept the player's hand");
-			previousAnnouncedHand = announcedHand;
 			return "accept";
 		}
 		else{
@@ -266,8 +279,8 @@ public class LiarDice {
 	}
 
 	@NotNull
-	private String findHandLoser(String announcedHand){
-		if (announcedHandContainsALie(announcedHand)){
+	private String findHandLoser(){
+		if (announcedHandContainsALie()){
 			System.out.printf("The real dice are %s. ", dice.getDice());
 			return "announcer";
 		}
@@ -277,12 +290,13 @@ public class LiarDice {
 		}
 	}
 
-	private boolean announcedHandContainsALie(String announcedHand){
-		/* Concludes that a hand is not a lie if the announcedHand <= realDice.
-		This defines a "lie" based on rankings, rather than dice. Ask about this.
+	private boolean announcedHandContainsALie(){
+		/* Concludes that a hand is not a lie if the newAnnouncedHand rank
+		<= realDice rank
+		This defines a "lie" based on rankings, rather than dice.
 		 */
 		return rollClassifier.isFirstHandHigherThanSecond(
-				announcedHand,
+				newAnnouncedHand,
 				dice.getString()
 		);
 	}
