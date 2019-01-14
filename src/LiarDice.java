@@ -7,7 +7,7 @@ public class LiarDice {
 
 	public static void main(String[] args) {
 		LiarDice liarDice = new LiarDice();
-		liarDice.addPlayers(5);
+		liarDice.addPlayers(2);
 		liarDice.gameLoop();
 	}
 
@@ -19,6 +19,7 @@ public class LiarDice {
 	Scanner scanner;
 	Dice dice;
 	String previousAnnouncedHand;
+	String newAnnouncedHand;
 	RollClassifier rollClassifier;
 
 
@@ -28,6 +29,7 @@ public class LiarDice {
 		dice = new Dice(numberOfDice);
 		rollClassifier = new RollClassifier(numberOfDice);
 		previousAnnouncedHand = new String();
+		newAnnouncedHand = new String();
 		players = new ArrayList<>();
 	}
 
@@ -52,12 +54,12 @@ public class LiarDice {
 		return lifeCounter >= 2;
 	}
 
-	private Player getGameWinner(){
-		if (atLeastTwoPlayersHaveOneLifeRemaining()){
+	private Player getGameWinner() {
+		if (atLeastTwoPlayersHaveOneLifeRemaining()) {
 			return null;
 		}
-		for (Player player : players){
-			if (player.hasLivesLeft()){
+		for (Player player : players) {
+			if (player.hasLivesLeft()) {
 				return player;
 			}
 		}
@@ -65,7 +67,7 @@ public class LiarDice {
 	}
 
 	private String getAnnouncedHand() {
-		if (!previousAnnouncedHand.isEmpty()){
+		if (!previousAnnouncedHand.isEmpty()) {
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		dice.printDice();
@@ -73,60 +75,68 @@ public class LiarDice {
 		/* If there is no previous announced hand, the player cannot roll the
 		dice. This is because it is the first throw of the new round.
 		 */
-		if (!previousAnnouncedHand.isEmpty() && playerWantsToRollDice()){
+		if (!previousAnnouncedHand.isEmpty() && playerWantsToRollDice()) {
 			rollChosenDice();
 		}
 		return chooseHandToAnnounce();
 	}
 
-	private void showHandThatPreviousPlayerSaidHeHad(){
-		System.out.printf(
-				"The previous player said that he had:\n%s\n", previousAnnouncedHand
-		);
+	private void showHandThatPreviousPlayerSaidHeHad() {
+		System.out.printf("The previous player said that he had:\n%s\n", previousAnnouncedHand);
 	}
 
-	private boolean playerWantsToRollDice(){
+	private boolean playerWantsToRollDice() {
 		System.out.println("Press Y if you would like to roll any dice");
 		String decision = scanner.next();
 		return decision.toUpperCase().equals("Y");
 	}
 
 	// Todo: partition this method.
-	private String chooseHandToAnnounce(){
-
-		// Choose hand to announce
-
-		if (!previousAnnouncedHand.isEmpty()){
+	private String chooseHandToAnnounce() {
+		if (!previousAnnouncedHand.isEmpty()) {
 			showHandThatPreviousPlayerSaidHeHad();
 		}
-		System.out.printf(
-				"Enter the %d dice to announce to the next player\n",
-				numberOfDice
-		);
-		String newAnnouncedHand = scanner.next();
-		if (newAnnouncedHand.length() != numberOfDice) {
-			System.out.printf(
-					"You did not enter %d dice. Asking again...\n",
-					numberOfDice
-			);
+		setNewAnnouncedHand();
+		// Check for correct number of dice
+		if (enteredIncorrectNumberOfDice()) {
 			return chooseHandToAnnounce();
 		}
-
-		//Check announced hand higher than previous hand
-		if (!previousAnnouncedHand.isEmpty()){
-			if (rollClassifier.isFirstHandHigherThanSecond(
-					previousAnnouncedHand, newAnnouncedHand
-			)){
-			System.out.printf(
-					"Unfortunately, the hand that you proposed to announce, " +
-					"%s,\n does not have a higher rank than the hand that the\n" +
-					"previous player announced, %s. \nRepeating question...\n\n",
-					newAnnouncedHand, previousAnnouncedHand);
+		// Check newly announced hand is higher than the previous announced hand.
+		if (newAnnouncedHandIsNotHigher()){
 			return chooseHandToAnnounce();
-			}
 		}
 		clearScreen();
 		return newAnnouncedHand;
+	}
+
+	private void setNewAnnouncedHand(){
+		System.out.printf("Enter the %d dice to announce to the next player\n", numberOfDice);
+		newAnnouncedHand = scanner.next();
+	}
+
+	private boolean enteredIncorrectNumberOfDice(){
+		if (newAnnouncedHand.length() != numberOfDice) {
+			System.out.printf("You did not enter %d dice. Asking again...\n", numberOfDice);
+			return true;
+		}
+		return false;
+
+	}
+
+	public boolean newAnnouncedHandIsNotHigher() {
+		if (!previousAnnouncedHand.isEmpty()) {
+			if (rollClassifier.isFirstHandHigherThanSecond(
+					previousAnnouncedHand, newAnnouncedHand)) {
+				System.out.printf(
+						"Unfortunately, the hand that you proposed to announce, " +
+						"%s,\n does not have a higher rank than the hand that " +
+						"the\n" + "previous player announced, %s. \n" +
+						"Repeating question...\n\n",
+						newAnnouncedHand, previousAnnouncedHand);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void rollChosenDice(){
@@ -197,8 +207,6 @@ public class LiarDice {
 					responder.loseLife();
 					responder.displayEliminationMessageIfEliminated();
 				}
-
-
 			}
 
 			//method : resetForNewRound
