@@ -23,6 +23,11 @@ public class RollClassifier {
 		return getRank(handA) > getRank(handB);
 	}
 
+	public boolean isFirstHandEqualToSecond(String handA, String handB) {
+		return getRank(handA) == getRank(handB);
+	}
+
+
 	public Integer getRank(String roll){
 		for (Map.Entry<Integer, String> entry : rollRank.entrySet()){
 			if (freqSorter.sortByFrequencyAndSize(roll).equals(

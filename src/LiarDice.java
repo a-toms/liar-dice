@@ -5,14 +5,6 @@ import java.util.*;
 
 public class LiarDice {
 
-	public static void main(String[] args) {
-		LiarDice liarDice = new LiarDice();
-		liarDice.addPlayers(2);
-		liarDice.gameLoop();
-	}
-
-	// Dice remain in LiarDice
-
 	private int numberOfPlayers;
 	private int numberOfDice;
 	private ArrayList<Player> players;
@@ -22,7 +14,6 @@ public class LiarDice {
 	String newAnnouncedHand;
 	RollClassifier rollClassifier;
 
-
 	public LiarDice() {
 		numberOfDice = 5;
 		scanner = new Scanner(System.in);
@@ -31,10 +22,6 @@ public class LiarDice {
 		previousAnnouncedHand = new String();
 		newAnnouncedHand = new String();
 		players = new ArrayList<>();
-	}
-
-	public void printNumberOfPlayers() {
-		System.out.printf("The game has %d players", players.size());
 	}
 
 	private void addPlayers(int nPlayers) {
@@ -69,10 +56,10 @@ public class LiarDice {
 	private String setAnnouncedHand() {
 		if (!previousAnnouncedHand.isEmpty()) {
 			showHandThatPreviousPlayerSaidHeHad();
+			printWhetherPreviousPlayerLied();
 		}
 		dice.printDice();
-
-		/* If there is no previous announced hand, the player cannot roll the
+		/* If there is no previous announced hand, the player is not permitted to roll the
 		dice. This is because it is the first throw of the new round.
 		 */
 		if (!previousAnnouncedHand.isEmpty() && playerWantsToRollDice()) {
@@ -86,7 +73,30 @@ public class LiarDice {
 				"The previous player said that he had:\n%s\n",
 				previousAnnouncedHand
 		);
+
 	}
+
+	private void printWhetherPreviousPlayerLied(){
+		if (realDiceLowerThanAnnounced()){
+			System.out.println(
+					"The previous player gave you a worse hand than " +
+					"the player told you that they had."
+			);
+		}
+		else if (realDiceEqualToAnnounced()){
+			System.out.println(
+					"The previous player gave you the hand that " +
+					"they told you that they had."
+			);
+		}
+		else {
+			System.out.println(
+					"The previous player gave you a better hand than " +
+					"they told you that they had."
+			);
+			}
+	}
+
 
 	private boolean playerWantsToRollDice() {
 		System.out.println("Press Y if you would like to roll any dice");
@@ -94,20 +104,17 @@ public class LiarDice {
 		return decision.toUpperCase().equals("Y");
 	}
 
-	// Todo: partition this method.
 	private String chooseHandToAnnounce() {
 		if (!previousAnnouncedHand.isEmpty()) {
 			showHandThatPreviousPlayerSaidHeHad();
 		}
 		setNewAnnouncedHand();
-
 		// Check for correct number of dice
 		if (enteredIncorrectNumberOfDice()) {
 			return chooseHandToAnnounce();
 		}
-
 		// Check newly announced hand is higher than the previous announced hand.
-		if (newAnnouncedHandIsNotHigher()){
+		if (newAnnouncedHandIsHigher() == true;){
 			return chooseHandToAnnounce();
 		}
 		clearScreenForNextPlayer();
@@ -134,10 +141,9 @@ public class LiarDice {
 
 	}
 
-	public boolean newAnnouncedHandIsNotHigher() {
+	// todo: Fix
+	public boolean newAnnouncedHandIsHigher() {
 		if (!previousAnnouncedHand.isEmpty()) {
-
-			// fixme: there is a bug here that allows the same hand to be announced as the previous announced hand.
 			if (rollClassifier.isFirstHandHigherThanSecond(
 					previousAnnouncedHand, newAnnouncedHand)
 			) {
@@ -146,7 +152,8 @@ public class LiarDice {
 						"%s,\n does not have a higher rank than the hand that " +
 						"the\n" + "previous player announced, %s. \n" +
 						"Repeating question...\n\n",
-						newAnnouncedHand, previousAnnouncedHand);
+						newAnnouncedHand,
+						previousAnnouncedHand);
 				return true;
 			}
 		}
@@ -280,7 +287,7 @@ public class LiarDice {
 
 	@NotNull
 	private String findHandLoser(){
-		if (announcedHandContainsALie()){
+		if (realDiceLowerThanAnnounced()){
 			System.out.printf("The real dice are %s. ", dice.getDice());
 			return "announcer";
 		}
@@ -290,14 +297,24 @@ public class LiarDice {
 		}
 	}
 
-	private boolean announcedHandContainsALie(){
-		/* Concludes that a hand is not a lie if the newAnnouncedHand rank
-		<= realDice rank
-		This defines a "lie" based on rankings, rather than dice.
-		 */
+	private boolean realDiceLowerThanAnnounced(){
 		return rollClassifier.isFirstHandHigherThanSecond(
 				newAnnouncedHand,
 				dice.getString()
+		);
+	}
+
+	private boolean realDiceEqualToAnnounced(){
+		return rollClassifier.isFirstHandEqualToSecond(
+				dice.getString(),
+				newAnnouncedHand
+		);
+	}
+
+	private boolean realDiceHigherThanAnnounced(){
+		return rollClassifier.isFirstHandHigherThanSecond(
+				dice.getString(),
+				newAnnouncedHand
 		);
 	}
 
@@ -321,5 +338,12 @@ public class LiarDice {
 		}
 		return isValidInteger;
 	}
+
+	public static void main(String[] args) {
+		LiarDice liarDice = new LiarDice();
+		liarDice.addPlayers(2);
+		liarDice.gameLoop();
+	}
+
 }
 

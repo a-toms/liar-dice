@@ -28,14 +28,6 @@ public class Dice extends RollClassifier {
 		return realDice;
 	}
 
-	public void setAllDice(String s) {
-		// Primarily intended for testing.
-		ArrayList<Integer> replacementDice = new ArrayList<>();
-		for (int i = 0; i < s.length(); i++) {
-			replacementDice.add(Character.getNumericValue(s.charAt(i)));
-		}
-		realDice = replacementDice;
-	}
 
 	public String getString(){
 		StringBuilder stringBuilder = new StringBuilder();
