@@ -70,6 +70,7 @@ public class LiarDice {
 
 	private void showHandThatPreviousPlayerSaidHeHad() {
 		System.out.printf(
+				"\n----------\n"+
 				"The previous player said that he had:\n%s\n",
 				previousAnnouncedHand
 		);
@@ -186,7 +187,6 @@ public class LiarDice {
 	}
 
 	public void gameLoop() {
-		String announcedHand;
 		String answer;
 		String loser;
 
@@ -228,19 +228,25 @@ public class LiarDice {
 					responder.displayEliminationMessageIfEliminated();
 				}
 			}
-
-			//method : resetForNewRound
-			dice.rollAll();
-			previousAnnouncedHand = new String();
-
-			//Rotate player order for next round
-			Collections.rotate(players, -1);
-
+			prepareForNewRound();
 		}
 		// If only one player remains.
+		announceWinner();
+	}
 
+	private void announceWinner(){
 		System.out.println("Game ends. ");
 		System.out.println("The winner is " + getGameWinner().name);
+	}
+
+	private void prepareForNewRound(){
+		dice.rollAll();
+		previousAnnouncedHand = new String();
+		rotatePlayerOrderForNextRound();
+	}
+
+	private void rotatePlayerOrderForNextRound(){
+		Collections.rotate(players, -1);
 	}
 
 	public Player getNextPlayerFrom(int index){
