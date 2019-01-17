@@ -36,7 +36,6 @@ public class RollClassifier {
 				return entry.getKey();
 			}
 		}
-		System.out.println("Roll not found.");
 		return 0;
 	}
 

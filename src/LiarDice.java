@@ -114,7 +114,7 @@ public class LiarDice {
 			return chooseHandToAnnounce();
 		}
 		// Check newly announced hand is higher than the previous announced hand.
-		if (newAnnouncedHandIsHigher() == true;){
+		if (newAnnouncedHandIsNotHigher() && !previousAnnouncedHand.isEmpty()){
 			return chooseHandToAnnounce();
 		}
 		clearScreenForNextPlayer();
@@ -141,24 +141,23 @@ public class LiarDice {
 
 	}
 
-	// todo: Fix
-	public boolean newAnnouncedHandIsHigher() {
-		if (!previousAnnouncedHand.isEmpty()) {
-			if (rollClassifier.isFirstHandHigherThanSecond(
-					previousAnnouncedHand, newAnnouncedHand)
-			) {
-				System.out.printf(
-						"Unfortunately, the hand that you proposed to announce, " +
-						"%s,\n does not have a higher rank than the hand that " +
-						"the\n" + "previous player announced, %s. \n" +
-						"Repeating question...\n\n",
-						newAnnouncedHand,
-						previousAnnouncedHand);
-				return true;
-			}
+	public boolean newAnnouncedHandIsNotHigher() {
+		if (rollClassifier.isFirstHandHigherThanSecond(
+				previousAnnouncedHand, newAnnouncedHand)) {
+			System.out.printf(
+					"Unfortunately, the hand that you proposed to announce, " +
+					"%s,\n does not have a higher rank than the hand that " +
+					"the\n" + "previous player announced, %s. \n" +
+					"Repeating question...\n\n",
+					newAnnouncedHand,
+					previousAnnouncedHand);
+			return true;
 		}
-		return false;
+		else{
+			return false;
+		}
 	}
+
 
 	private void rollChosenDice(){
 		System.out.println(

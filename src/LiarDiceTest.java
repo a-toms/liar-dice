@@ -10,7 +10,7 @@ class LiarDiceTest {
 	void testNewAnnouncedHandIsNotHigher(){
 		liarDice.newAnnouncedHand = "11111";
 		liarDice.previousAnnouncedHand = "22222";
-		assertTrue(liarDice.newAnnouncedHandIsNotHigher());
+		assertFalse(liarDice.newAnnouncedHandIsNotHigher());
 	}
 
 	@Test
