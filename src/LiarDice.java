@@ -70,7 +70,7 @@ public class LiarDice {
 
 	private void showHandThatPreviousPlayerSaidHeHad() {
 		System.out.printf(
-				"\n----------\n"+
+				"----------\n" +
 				"The previous player said that he had:\n%s\n",
 				previousAnnouncedHand
 		);
@@ -144,10 +144,13 @@ public class LiarDice {
 
 	public boolean newAnnouncedHandIsNotHigher() {
 		if (rollClassifier.isFirstHandHigherThanSecond(
-				previousAnnouncedHand, newAnnouncedHand)) {
+				previousAnnouncedHand, newAnnouncedHand)
+		|| rollClassifier.isFirstHandEqualToSecond(
+				previousAnnouncedHand, newAnnouncedHand)
+		) {
 			System.out.printf(
 					"Unfortunately, the hand that you proposed to announce, " +
-					"%s,\n does not have a higher rank than the hand that " +
+					"%s,\ndoes not have a higher rank than the hand that " +
 					"the\n" + "previous player announced, %s. \n" +
 					"Repeating question...\n\n",
 					newAnnouncedHand,
@@ -158,6 +161,8 @@ public class LiarDice {
 			return false;
 		}
 	}
+
+
 
 
 	private void rollChosenDice(){
