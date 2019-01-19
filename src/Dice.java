@@ -4,9 +4,9 @@ import java.util.*;
 
 public class Dice extends RollClassifier {
 
-	int numberOfDice;
+	final int numberOfDice;
 	private ArrayList<Integer> realDice;
-	Random random;
+	final Random random;
 
 	public Dice(int numberOfDice){
 		super(numberOfDice);

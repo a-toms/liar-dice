@@ -39,16 +39,6 @@ public class RollClassifier {
 		return 0;
 	}
 
-	public ArrayList<String> getAllRollsContaining(String target){
-		ArrayList<String> rollsContaining = new ArrayList<>();
-		for (Map.Entry<Integer, String> entry : rollRank.entrySet()){
-			String roll = String.valueOf(entry.getValue());
-			if (containsAll(roll, target)){
-				rollsContaining.add(roll);
-			}
-		}
-		return rollsContaining;
-	}
 
 	private boolean containsAll(String candidate, String target){
 		/* Returns boolean based on whether the candidate contains
@@ -61,12 +51,6 @@ public class RollClassifier {
 		}
 		return true;
 	}
-
-	public String getRoll(Integer rank){
-		return rollRank.get(rank);
-	}
-
-
 
 	private void orderRollsByRank(int numberOfDice) {
 		ArrayList<String> allRolls = generatePossibleRolls(numberOfDice);

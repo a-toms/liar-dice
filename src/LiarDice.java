@@ -6,13 +6,13 @@ import java.util.*;
 public class LiarDice {
 
 	private int numberOfPlayers;
-	private int numberOfDice;
-	private ArrayList<Player> players;
-	Scanner scanner;
-	Dice dice;
+	private final int numberOfDice;
+	private final ArrayList<Player> players;
+	final Scanner scanner;
+	final Dice dice;
 	String previousAnnouncedHand;
 	String newAnnouncedHand;
-	RollClassifier rollClassifier;
+	final RollClassifier rollClassifier;
 
 	public LiarDice() {
 		numberOfDice = 5;
