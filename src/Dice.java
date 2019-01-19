@@ -1,46 +1,80 @@
-
-import java.util.ArrayList;
-import java.util.Random;
-
-public class Dice {
-
-	final int numberOfDice = 6;
-	int[] dice = new int[numberOfDice];
-	Random random = new Random();
-	int score = 0;
+import java.util.*;
 
 
-	public Dice(){
-		rollAllDice();
+
+public class Dice extends RollClassifier {
+
+	int numberOfDice;
+	private ArrayList<Integer> realDice;
+	Random random;
+
+	public Dice(int numberOfDice){
+		super(numberOfDice);
+		random = new Random();
+		this.numberOfDice = numberOfDice;
+		realDice = new ArrayList<>(this.numberOfDice);
+		rollAll();
 	}
 
-	public void rollAllDice(){
+	public void rollAll(){
+		realDice = new ArrayList<>();
+		System.out.println("Rolling all of the dice");
 		for (int i = 0; i < numberOfDice; i++){
-			rollDie(i);
+			realDice.add(i, random.nextInt(6) + 1);
 		}
 	}
 
-	public void rollDie(int die){
-		dice[die] = random.nextInt(6) + 1;
+	public ArrayList<Integer> getDice() {
+		return realDice;
+	}
+
+
+	public String getString(){
+		StringBuilder stringBuilder = new StringBuilder();
+		for (Integer die: realDice){
+			stringBuilder.append(die);
+		}
+		return stringBuilder.toString();
+	}
+
+	public void roll(Integer die){
+		Integer rolledDie = random.nextInt(6) + 1;
+		System.out.printf(
+				"Rolled %d to give %d\n", die, rolledDie
+		);
+		realDice.set(getIndexOf(die), rolledDie);
+	}
+
+	public int getIndexOf(Integer die){
+		return realDice.indexOf(die);
+	}
+
+	public ArrayList<Integer> getIndicesOf(Integer die){
+		ArrayList<Integer> indices = new ArrayList<>();
+		for (int i = 0; i < realDice.size(); i++) {
+			if (realDice.get(i).equals(die)){
+				indices.add(i);
+			}
+		}
+		return indices;
+	}
+
+	public boolean containsDie(Integer die){
+		return realDice.contains(die);
+	}
+
+	public boolean containsMoreThanOneOf(Integer die){
+		return getIndicesOf(die).size() > 1;
 	}
 
 
 	public void printDice(){
-		System.out.print("Dice:\t");
-		for (int die : dice){
+		System.out.print("Actual dice:\t\t");
+		for (int die : realDice){
 			System.out.print(die + "\t");
 		}
-		System.out.println();
+		System.out.println("\n");
 	}
 
-	public static void main(String[] args) {
-		Dice dice = new Dice();
-		dice.printDice();
-		dice.rollAllDice();
-		dice.printDice();
-	}
-
-	// How to calculate dice score and update class attribute score?
-	/* high number, pair, two pair, three of a kind, straight, four of a kind, five of a kind */
 
 }

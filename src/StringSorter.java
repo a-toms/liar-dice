@@ -1,21 +1,28 @@
 import org.apache.commons.lang3.StringUtils;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class FreqSorter {
+public class StringSorter {
 
 	String raw;
 	HashMap <Character, Integer>newmap;
 	String sorted;
 	ArrayList<String> freqCounts;
 
-	public FreqSorter() {
-		newmap = new HashMap<>();
-		freqCounts = new ArrayList<>();
-		sorted = "";
+	public static void main(String[] args) {
+		StringSorter stringSorter = new StringSorter();
+		String test1 = "4234233";
+		System.out.println(stringSorter.sortByFrequencyAndSize(test1));
+	}
 
+	public StringSorter() {
 	}
 
 	public String sortByFrequencyAndSize(String unsorted) {
+		newmap = new HashMap<>();
+		freqCounts = new ArrayList<>();
+		sorted = "";
 		raw = unsorted;
 		createFrequencyMap();
 		createListOfStringsByFrequency();
@@ -34,12 +41,12 @@ public class FreqSorter {
 		Set set = newmap.entrySet();
 		for (Object aSet : set) {
 			Map.Entry me = (Map.Entry) aSet;
-			String segment = StringUtils.repeat(me.getKey().toString(), Integer.parseInt(me.getValue().toString()));
+			String segment = StringUtils.repeat(me.getKey().toString(),
+					Integer.parseInt(me.getValue().toString()));
 			// We must convert object types to strings before converting to
 			// integers. Why?
 			freqCounts.add(segment);
 		}
-		System.out.println(freqCounts);
 	}
 
 	private String produceSortedString() {
@@ -64,5 +71,15 @@ public class FreqSorter {
 
 	private boolean isGreaterValue(String current, String challenger){
 		return Integer.valueOf(challenger) > Integer.valueOf(current);
+	}
+
+	public String sortBySize(String unsorted){
+		String sorted = Stream.of(
+				unsorted.split(""))
+				.sorted()
+				.collect(Collectors.joining()
+		);
+		StringBuilder descendingOrder = new StringBuilder(sorted).reverse();
+		return descendingOrder.toString();
 	}
 }
