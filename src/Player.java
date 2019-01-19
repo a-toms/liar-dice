@@ -5,13 +5,13 @@ import java.util.Scanner;
 
 public class Player {
 
-	String name;
-	Integer numberOfDice;
+	final String name;
+	final Integer numberOfDice;
 	private Integer livesLeft;
-	Integer numberOfBluffs;
-	StringSorter stringSorter;
-	Scanner scanner;
-	RollClassifier rollClassifier;
+	final Integer numberOfBluffs;
+	final StringSorter stringSorter;
+	final Scanner scanner;
+	final RollClassifier rollClassifier;
 
 	public Player(String playerName){
 		name = playerName;
